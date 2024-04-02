@@ -53,22 +53,22 @@ Setting up configuration for the main prosody is a manual process:
 ```
 -- targets must be IPs, not hostnames
 s2sout_override = {
-    ["conference.v1.meet.jitsi"] = "tcp://127.0.0.1:52691";
-    ["v1.meet.jitsi"] = "tcp://127.0.0.1:52691"; -- needed for v1.meet.jitsi->visitors.jitmeet.example.com
-    ["conference.v2.meet.jitsi"] = "tcp://127.0.0.1:52692";
-    ["v2.meet.jitsi"] = "tcp://127.0.0.1:52692";
-    ["conference.v3.meet.jitsi"] = "tcp://127.0.0.1:52693";
-    ["v3.meet.jitsi"] = "tcp://127.0.0.1:52693";
-    ["conference.v4.meet.jitsi"] = "tcp://127.0.0.1:52694";
-    ["v4.meet.jitsi"] = "tcp://127.0.0.1:52694";
-    ["conference.v5.meet.jitsi"] = "tcp://127.0.0.1:52695";
-    ["v5.meet.jitsi"] = "tcp://127.0.0.1:52695";
-    ["conference.v6.meet.jitsi"] = "tcp://127.0.0.1:52696";
-    ["v6.meet.jitsi"] = "tcp://127.0.0.1:52696";
-    ["conference.v7.meet.jitsi"] = "tcp://127.0.0.1:52697";
-    ["v7.meet.jitsi"] = "tcp://127.0.0.1:52697";
-    ["conference.v8.meet.jitsi"] = "tcp://127.0.0.1:52698";
-    ["v8.meet.jitsi"] = "tcp://127.0.0.1:52698";
+    ["conference.v1.meet.jitsi"] = "tcp://37.60.242.154:52691";
+    ["v1.meet.jitsi"] = "tcp://37.60.242.154:52691"; -- needed for v1.meet.jitsi->visitors.jitmeet.example.com
+    ["conference.v2.meet.jitsi"] = "tcp://37.60.242.154:52692";
+    ["v2.meet.jitsi"] = "tcp://37.60.242.154:52692";
+    ["conference.v3.meet.jitsi"] = "tcp://37.60.242.154:52693";
+    ["v3.meet.jitsi"] = "tcp://37.60.242.154:52693";
+    ["conference.v4.meet.jitsi"] = "tcp://37.60.242.154:52694";
+    ["v4.meet.jitsi"] = "tcp://37.60.242.154:52694";
+    ["conference.v5.meet.jitsi"] = "tcp://37.60.242.154:52695";
+    ["v5.meet.jitsi"] = "tcp://37.60.242.154:52695";
+    ["conference.v6.meet.jitsi"] = "tcp://37.60.242.154:52696";
+    ["v6.meet.jitsi"] = "tcp://37.60.242.154:52696";
+    ["conference.v7.meet.jitsi"] = "tcp://37.60.242.154:52697";
+    ["v7.meet.jitsi"] = "tcp://37.60.242.154:52697";
+    ["conference.v8.meet.jitsi"] = "tcp://37.60.242.154:52698";
+    ["v8.meet.jitsi"] = "tcp://37.60.242.154:52698";
 }
 -- allowed list of server-2-server connections
 s2s_whitelist = {
@@ -89,12 +89,12 @@ Component "visitors.jitmeet.example.com" "visitors_component"
 ```
 upstream v1 {
     zone upstreams 64K;
-    server 127.0.0.1:52801;
+    server 37.60.242.154:52801;
     keepalive 2;
 }
 upstream v2 {
     zone upstreams 64K;
-    server 127.0.0.1:52802;
+    server 37.60.242.154:52802;
     keepalive 2;
 }
 ```

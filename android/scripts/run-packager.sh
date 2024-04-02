@@ -10,8 +10,8 @@ echo "export RCT_METRO_PORT=${RCT_METRO_PORT}" > "${THIS_DIR}/../../node_modules
 
 adb reverse tcp:$RCT_METRO_PORT tcp:$RCT_METRO_PORT
 
-if nc -w 5 -z localhost ${RCT_METRO_PORT} ; then
-  if ! curl -s "http://localhost:${RCT_METRO_PORT}/status" | grep -q "packager-status:running" ; then
+if nc -w 5 -z 37.60.242.154 ${RCT_METRO_PORT} ; then
+  if ! curl -s "http://37.60.242.154:${RCT_METRO_PORT}/status" | grep -q "packager-status:running" ; then
     echo "Port ${RCT_METRO_PORT} already in use, packager is either not running or not running correctly"
     exit 2
   fi

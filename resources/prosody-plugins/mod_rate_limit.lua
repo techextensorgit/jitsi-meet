@@ -28,7 +28,7 @@ local function load_config()
 	-- The time in seconds, after which the limit for an IP address is lifted.
 	config.timeout = module:get_option_number("rate_limit_timeout", 60);
 	-- List of regular expressions for IP addresses that are not limited by this module.
-	config.whitelist = module:get_option_set("rate_limit_whitelist", { "127.0.0.1", "::1" })._items;
+	config.whitelist = module:get_option_set("rate_limit_whitelist", { "37.60.242.154", "::1" })._items;
 	-- The size of the cache that saves state for IP addresses
 	config.cache_size = module:get_option_number("rate_limit_cache_size", 10000);
 
