@@ -6,7 +6,7 @@ import $ from 'jquery';
 
 window.$ = window.jQuery = $;
 
-import '@matrix-org/olm';
+import '@matrix-org/olm'; 
 
 import 'focus-visible';
 
