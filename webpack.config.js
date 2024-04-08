@@ -259,28 +259,9 @@ function getDevServerConfig() {
 
 function getProdServerConfig() {
     return {
-        client: {
-            overlay: {
-                errors: true,
-                warnings: false
-            }
-        },
         host: '185.100.212.51',
-        hot: true,
-        proxy: {
-            '/': {
-                bypass: devServerProxyBypass,
-                secure: false,
-                target: devServerProxyTarget,
-                headers: {
-                    'Host': new URL(devServerProxyTarget).host
-                }
-            }
-        },
-        server: process.env.CODESPACES ? 'http' : 'https',
-        static: {
-            directory: process.cwd()
-        }
+        port:8882,
+        server: 'https'
     };
 }
 
