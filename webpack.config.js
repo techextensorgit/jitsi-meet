@@ -238,7 +238,7 @@ function getDevServerConfig() {
                 warnings: false
             }
         },
-        host: '37.60.242.154',
+        host: '185.100.212.51',
         hot: true,
         proxy: {
             '/': {
