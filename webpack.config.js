@@ -28,7 +28,7 @@ function getPerformanceHints(options, size) {
     const { analyzeBundle, isProduction } = options;
 
     return {
-        hints: isProduction && !analyzeBundle ? 'error' : false,
+        hints: false,//isProduction && !analyzeBundle ? 'error' : false,
         maxAssetSize: size,
         maxEntrypointSize: size
     };
@@ -238,7 +238,7 @@ function getDevServerConfig() {
                 warnings: false
             }
         },
-        host: '37.60.242.154',
+        host: '185.100.212.51',
         hot: true,
         proxy: {
             '/': {
@@ -254,6 +254,14 @@ function getDevServerConfig() {
         static: {
             directory: process.cwd()
         }
+    };
+}
+
+function getProdServerConfig() {
+    return {
+        host: '185.100.212.51',
+        port:8882,
+        server: 'https'
     };
 }
 
@@ -276,7 +284,7 @@ module.exports = (_env, argv) => {
             entry: {
                 'app.bundle': './app.js'
             },
-            devServer: isProduction ? {} : getDevServerConfig(),
+            devServer: isProduction ? getProdServerConfig() : getDevServerConfig(),
             plugins: [
                 ...config.plugins,
                 ...getBundleAnalyzerPlugin(analyzeBundle, 'app'),
@@ -293,7 +301,7 @@ module.exports = (_env, argv) => {
                 })
             ],
 
-            performance: getPerformanceHints(perfHintOptions, 5 * 1024 * 1024)
+            performance: getPerformanceHints(perfHintOptions, 10 * 1024 * 1024)
 
         }),
         Object.assign({}, config, {

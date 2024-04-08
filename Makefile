@@ -18,16 +18,23 @@ STYLES_DESTINATION = css/all.css
 STYLES_MAIN = css/main.scss
 ifeq ($(OS),Windows_NT)
 	WEBPACK = .\node_modules\.bin\webpack
-	WEBPACK_DEV_SERVER = .\node_modules\.bin\webpack serve --mode development
+	WEBPACK_DEV_SERVER = .\node_modules\.bin\webpack serve --mode production
 else
 	WEBPACK = ./node_modules/.bin/webpack
-	WEBPACK_DEV_SERVER = ./node_modules/.bin/webpack serve --mode development
+	WEBPACK_DEV_SERVER = ./node_modules/.bin/webpack serve --mode production
+endif
+
+
+ifeq ($(OS),Windows_NT)
+    WEBPACK_PROD_SERVER = .\node_modules\.bin\webpack serve --mode production --port 8882
+else
+    WEBPACK_PROD_SERVER = ./node_modules/.bin/webpack serve --mode production --port 8882
 endif
 
 all: compile deploy clean
 
 compile:
-	NODE_OPTIONS=--max-old-space-size=8192 \
+	NODE_OPTIONS=--max-old-space-size=10240 \
 	$(WEBPACK)
 
 clean:
@@ -35,6 +42,10 @@ clean:
 
 .NOTPARALLEL:
 deploy: deploy-init deploy-appbundle deploy-rnnoise-binary deploy-excalidraw deploy-tflite deploy-meet-models deploy-lib-jitsi-meet deploy-olm deploy-tf-wasm deploy-css deploy-local deploy-face-landmarks
+
+
+prod: deploy-init deploy-appbundle deploy-rnnoise-binary deploy-excalidraw deploy-tflite deploy-meet-models deploy-lib-jitsi-meet deploy-olm deploy-tf-wasm deploy-css deploy-local deploy-face-landmarks
+
 
 deploy-init:
 	rm -fr $(DEPLOY_DIR)
@@ -123,6 +134,9 @@ deploy-local:
 dev: deploy-init deploy-css deploy-rnnoise-binary deploy-tflite deploy-meet-models deploy-lib-jitsi-meet deploy-olm deploy-tf-wasm deploy-excalidraw-dev deploy-face-landmarks
 	$(WEBPACK_DEV_SERVER)
 
+prod:  compile deploy clean 
+	NODE_OPTIONS=--max-old-space-size=10240 \
+	$(WEBPACK_PROD_SERVER)
 source-package:
 	mkdir -p source_package/jitsi-meet/css && \
 	cp -r *.js *.html resources/*.txt fonts images libs static sounds LICENSE lang source_package/jitsi-meet && \
