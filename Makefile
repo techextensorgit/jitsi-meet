@@ -17,17 +17,19 @@ STYLES_BUNDLE = css/all.bundle.css
 STYLES_DESTINATION = css/all.css
 STYLES_MAIN = css/main.scss
 ifeq ($(OS),Windows_NT)
-	WEBPACK = .\node_modules\.bin\webpack
-	WEBPACK_DEV_SERVER = .\node_modules\.bin\webpack serve --mode production
+	WEBPACK = .\node_modules\.bin\webpack-dev-server
+	WEBPACK_DEV_SERVER = ./node_modules/.bin/webpack serve --mode development
 else
-	WEBPACK = ./node_modules/.bin/webpack
-	WEBPACK_DEV_SERVER = ./node_modules/.bin/webpack serve --mode production
+	WEBPACK = ./node_modules/.bin/webpack-dev-server
+	WEBPACK_DEV_SERVER = ./node_modules/.bin/webpack serve --mode development
 endif
 
 
 ifeq ($(OS),Windows_NT)
+	WEBPACK = ./node_modules/.bin/webpack
     WEBPACK_PROD_SERVER = .\node_modules\.bin\webpack serve --mode production --port 8882
 else
+	WEBPACK = ./node_modules/.bin/webpack
     WEBPACK_PROD_SERVER = ./node_modules/.bin/webpack serve --mode production --port 8882
 endif
 
