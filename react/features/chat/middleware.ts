@@ -3,7 +3,7 @@ import { AnyAction } from 'redux';
 import { IReduxState, IStore } from '../app/types';
 import { APP_WILL_MOUNT, APP_WILL_UNMOUNT } from '../base/app/actionTypes';
 import { CONFERENCE_JOINED, ENDPOINT_MESSAGE_RECEIVED } from '../base/conference/actionTypes';
-import { getCurrentConference } from '../base/conference/functions';
+import { getCurrentConference } from '../base/conference/functions'; 
 import { IJitsiConference } from '../base/conference/reducer';
 import { openDialog } from '../base/dialog/actions';
 import i18next from '../base/i18n/i18next';
