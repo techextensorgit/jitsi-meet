@@ -187,11 +187,11 @@ const Chat = ({
             }
         });
 
-        const requestOptions = {
+        const requestOptions : RequestInit = {
             method: "POST",
             headers: myHeaders,
             body: raw,
-            redirect: "follow"
+            redirect: undefined
         };
 
         fetch("https://elsa.techextensor.com/Jitsiwebhook/InsertMeetingEvent", requestOptions)

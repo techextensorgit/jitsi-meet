@@ -60,7 +60,7 @@ class HangupButton extends AbstractHangupButton<AbstractButtonProps> {
             }
         });
 
-        const requestOptions = {
+        const requestOptions : RequestInit = {
             method: "POST",
             headers: myHeaders,
             body: raw,

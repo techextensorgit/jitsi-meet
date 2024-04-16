@@ -266,24 +266,26 @@ const Prejoin = ({
 
         joinConference();
     };
-    function extractMeetingData(url: string) {
+    function extractMeetingData(url: string | null) {
         var regexMeetingID = /MeetingID=([a-f0-9-]+)/i;
         var regexIsModerator = /isModerator=(true|false)/i;
         var regexUserType = /userType=([^&]+)/i;
 
-        var matchMeetingID = url.match(regexMeetingID);
-        var matchIsModerator = url.match(regexIsModerator);
-        var matchUserType = url.match(regexUserType);
+        let matchMeetingID = url?.match(regexMeetingID);
+        let matchIsModerator = url?.match(regexIsModerator);
+        let matchUserType = url?.match(regexUserType);
 
-        var meetingID = (matchMeetingID && matchMeetingID[1]) ? matchMeetingID[1] : null;
-        var isModerator = (matchIsModerator && matchIsModerator[1]) ? matchIsModerator[1] === "true" : null;
-        var userType = (matchUserType && matchUserType[1]) ? matchUserType[1] : null;
+
+        let meetingID = matchMeetingID?.[1] ?? null;
+        let isModerator = matchIsModerator?.[1] === 'true' ?? null;
+        let userType = matchUserType?.[1] ?? null;
+
 
         console.log("custumUrl" + window.location.href); // Output: 169d904c-2a0c-411a-8051-5d79c23a6bf0
         console.log("meetingID>>>>>>>>>>>>>>>>>>>>" + meetingID); // Output: 169d904c-2a0c-411a-8051-5d79c23a6bf0
-        window.sessionStorage.setItem("meetingID", meetingID)
-        window.sessionStorage.setItem("isModerator", isModerator)
-        window.sessionStorage.setItem("userType", userType)
+        window.sessionStorage.setItem("meetingID", meetingID ?? "")
+        window.sessionStorage.setItem("isModerator", String(isModerator))
+        window.sessionStorage.setItem("userType", userType ?? "")
         window.sessionStorage.setItem("name", name)
         const myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
@@ -295,15 +297,14 @@ const Prejoin = ({
             "data": {
                 "display_name": name,
                 "userType": userType,
-                "time": new Date()
+                "time": new Date().toISOString()
             }
         });
 
-        const requestOptions = {
+        const requestOptions : RequestInit = {
             method: "POST",
             headers: myHeaders,
             body: raw,
-            redirect: "follow"
         };
 
         fetch("https://elsa.techextensor.com/Jitsiwebhook/InsertMeetingEvent", requestOptions)
