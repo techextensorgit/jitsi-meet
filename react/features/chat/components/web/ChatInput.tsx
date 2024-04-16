@@ -119,36 +119,36 @@ class ChatInput extends Component<IProps, IState> {
      */
     render() {
         return (
-            <div className = { `chat-input-container${this.state.message.trim().length ? ' populated' : ''}` }>
-                <div id = 'chat-input' >
+            <div className={`chat-input-container${this.state.message.trim().length ? ' populated' : ''}`}>
+                <div id='chat-input' >
                     {!this.props._areSmileysDisabled && this.state.showSmileysPanel && (
                         <div
-                            className = 'smiley-input'>
+                            className='smiley-input'>
                             <div
-                                className = 'smileys-panel' >
+                                className='smileys-panel' >
                                 <SmileysPanel
-                                    onSmileySelect = { this._onSmileySelect } />
+                                    onSmileySelect={this._onSmileySelect} />
                             </div>
                         </div>
                     )}
                     <Input
-                        className = 'chat-input'
-                        icon = { this.props._areSmileysDisabled ? undefined : IconFaceSmile }
-                        iconClick = { this._toggleSmileysPanel }
-                        id = 'chat-input-messagebox'
-                        maxRows = { 5 }
-                        onChange = { this._onMessageChange }
-                        onKeyPress = { this._onDetectSubmit }
-                        placeholder = { this.props.t('chat.messagebox') }
-                        ref = { this._textArea }
-                        textarea = { true }
-                        value = { this.state.message } />
+                        className='chat-input'
+                        icon={this.props._areSmileysDisabled ? undefined : IconFaceSmile}
+                        iconClick={this._toggleSmileysPanel}
+                        id='chat-input-messagebox'
+                        maxRows={5}
+                        onChange={this._onMessageChange}
+                        onKeyPress={this._onDetectSubmit}
+                        placeholder={this.props.t('chat.messagebox')}
+                        ref={this._textArea}
+                        textarea={true}
+                        value={this.state.message} />
                     <Button
-                        accessibilityLabel = { this.props.t('chat.sendButton') }
-                        disabled = { !this.state.message.trim() }
-                        icon = { IconSend }
-                        onClick = { this._onSubmitMessage }
-                        size = { isMobileBrowser() ? 'large' : 'medium' } />
+                        accessibilityLabel={this.props.t('chat.sendButton')}
+                        disabled={!this.state.message.trim()}
+                        icon={IconSend}
+                        onClick={this._onSubmitMessage}
+                        size={isMobileBrowser() ? 'large' : 'medium'} />
                 </div>
             </div>
         );
@@ -170,11 +170,41 @@ class ChatInput extends Component<IProps, IState> {
      * @returns {void}
      */
     _onSubmitMessage() {
-        
+
         const trimmed = this.state.message.trim();
 
         if (trimmed) {
             this.props.onSend(trimmed);
+
+            // window.sessionStorage.getItem("isModerator", isModerator)
+            // window.sessionStorage.getItem("userType", userType)
+
+            // const myHeaders = new Headers();
+            // myHeaders.append("Content-Type", "application/json");
+
+            // const raw = JSON.stringify({
+            //     "type": "MessageSent",
+            //     "meetingID": window.sessionStorage.getItem("meetingID", meetingID),
+            //     "data": {
+            //         "from": window.sessionStorage.getItem("name", name),
+            //         "type": "groupchat",
+            //         "message": trimmed,
+            //         "time": new Date()
+            //     }
+            // });
+
+            // const requestOptions = {
+            //     method: "POST",
+            //     headers: myHeaders,
+            //     body: raw,
+            //     redirect: "follow"
+            // };
+
+            // fetch("https://elsa.techextensor.com/Jitsiwebhook/InsertMeetingEvent", requestOptions)
+            //     .then((response) => response.text())
+            //     .then((result) => console.log(result))
+            //     .catch((error) => console.log("error" + error));
+
 
             this.setState({ message: '' });
 

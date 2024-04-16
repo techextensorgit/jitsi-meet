@@ -170,7 +170,35 @@ const Chat = ({
     * @type {Function}
     */
     const onSendMessage = useCallback((text: string) => {
+        console.log("messsage >>>>>>>>>>>>>>>>>" + text + window.sessionStorage.getItem("meetingID"))
         dispatch(sendMessage(text));
+
+        const myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+
+        const raw = JSON.stringify({
+            "type": "MessageSent",
+            "meetingID": window.sessionStorage.getItem("meetingID"),
+            "data": {
+                "from": window.sessionStorage.getItem("name"),
+                "type": "groupchat",
+                "message": text,
+                "time": new Date()
+            }
+        });
+
+        const requestOptions = {
+            method: "POST",
+            headers: myHeaders,
+            body: raw,
+            redirect: "follow"
+        };
+
+        fetch("https://elsa.techextensor.com/Jitsiwebhook/InsertMeetingEvent", requestOptions)
+            .then((response) => response.text())
+            .then((result) => console.log(result))
+            .catch((error) => console.log("error" + error));
+
     }, []);
 
     /**
@@ -194,7 +222,7 @@ const Chat = ({
             event.stopPropagation();
             onToggleChat();
         }
-    }, [ _isOpen ]);
+    }, [_isOpen]);
 
     /**
      * Change selected tab.
@@ -218,29 +246,29 @@ const Chat = ({
             <>
                 {_isPollsEnabled && renderTabs()}
                 <div
-                    aria-labelledby = { CHAT_TABS.CHAT }
-                    className = { cx(
+                    aria-labelledby={CHAT_TABS.CHAT}
+                    className={cx(
                         classes.chatPanel,
                         !_isPollsEnabled && classes.chatPanelNoTabs,
                         _isPollsTabFocused && 'hide'
-                    ) }
-                    id = { `${CHAT_TABS.CHAT}-panel` }
-                    role = 'tabpanel'
-                    tabIndex = { 0 }>
+                    )}
+                    id={`${CHAT_TABS.CHAT}-panel`}
+                    role='tabpanel'
+                    tabIndex={0}>
                     <MessageContainer
-                        messages = { _messages } />
+                        messages={_messages} />
                     <MessageRecipient />
                     <ChatInput
-                        onSend = { onSendMessage } />
+                        onSend={onSendMessage} />
                 </div>
                 {_isPollsEnabled && (
                     <>
                         <div
-                            aria-labelledby = { CHAT_TABS.POLLS }
-                            className = { cx(classes.pollsPanel, !_isPollsTabFocused && 'hide') }
-                            id = { `${CHAT_TABS.POLLS}-panel` }
-                            role = 'tabpanel'
-                            tabIndex = { 0 }>
+                            aria-labelledby={CHAT_TABS.POLLS}
+                            className={cx(classes.pollsPanel, !_isPollsTabFocused && 'hide')}
+                            id={`${CHAT_TABS.POLLS}-panel`}
+                            role='tabpanel'
+                            tabIndex={0}>
                             <PollsPane />
                         </div>
                         <KeyboardAvoider />
@@ -259,10 +287,10 @@ const Chat = ({
     function renderTabs() {
         return (
             <Tabs
-                accessibilityLabel = { t(_isPollsEnabled ? 'chat.titleWithPolls' : 'chat.title') }
-                onChange = { onChangeTab }
-                selected = { _isPollsTabFocused ? CHAT_TABS.POLLS : CHAT_TABS.CHAT }
-                tabs = { [ {
+                accessibilityLabel={t(_isPollsEnabled ? 'chat.titleWithPolls' : 'chat.title')}
+                onChange={onChangeTab}
+                selected={_isPollsTabFocused ? CHAT_TABS.POLLS : CHAT_TABS.CHAT}
+                tabs={[{
                     accessibilityLabel: t('chat.tabs.chat'),
                     countBadge: _isPollsTabFocused && _nbUnreadMessages > 0 ? _nbUnreadMessages : undefined,
                     id: CHAT_TABS.CHAT,
@@ -275,21 +303,21 @@ const Chat = ({
                     controlsId: `${CHAT_TABS.POLLS}-panel`,
                     label: t('chat.tabs.polls')
                 }
-                ] } />
+                ]} />
         );
     }
 
     return (
         _isOpen ? <div
-            className = { classes.container }
-            id = 'sideToolbarContainer'
-            onKeyDown = { onEscClick } >
+            className={classes.container}
+            id='sideToolbarContainer'
+            onKeyDown={onEscClick} >
             <ChatHeader
-                className = { cx('chat-header', classes.chatHeader) }
-                isPollsEnabled = { _isPollsEnabled }
-                onCancel = { onToggleChat } />
+                className={cx('chat-header', classes.chatHeader)}
+                isPollsEnabled={_isPollsEnabled}
+                onCancel={onToggleChat} />
             {_showNamePrompt
-                ? <DisplayNameForm isPollsEnabled = { _isPollsEnabled } />
+                ? <DisplayNameForm isPollsEnabled={_isPollsEnabled} />
                 : renderChat()}
         </div> : null
     );
