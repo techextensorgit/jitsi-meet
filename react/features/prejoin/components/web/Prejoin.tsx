@@ -295,7 +295,6 @@ const Prejoin = ({
             "data": {
                 "display_name": name,
                 "userType": userType,
-                "email": "john.doe@example.com",
                 "time": new Date()
             }
         });
