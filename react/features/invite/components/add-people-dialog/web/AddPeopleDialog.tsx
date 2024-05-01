@@ -151,33 +151,33 @@ function AddPeopleDialog({
 
     return (
         <Dialog
-            cancel = {{ hidden: true }}
-            ok = {{ hidden: true }}
-            titleKey = 'addPeople.inviteMorePrompt'>
-            <div className = 'invite-more-dialog'>
-                { _inviteContactsVisible && <InviteContactsSection /> }
-                {_urlSharingVisible ? <CopyMeetingLinkSection url = { _inviteUrl } /> : null}
+            cancel={{ hidden: true }}
+            ok={{ hidden: true }}
+            titleKey='addPeople.inviteMorePrompt'>
+            <div className='invite-more-dialog'>
+                {_inviteContactsVisible && <InviteContactsSection />}
+                {_urlSharingVisible ? <CopyMeetingLinkSection url={_inviteUrl} /> : null}
                 {
                     _emailSharingVisible
                         ? <InviteByEmailSection
-                            inviteSubject = { inviteSubject }
-                            inviteText = { _invitationText }
-                            inviteTextiOS = { _invitationTextiOS } />
+                            inviteSubject={inviteSubject}
+                            inviteText={_invitationText}
+                            inviteTextiOS={_invitationTextiOS} />
                         : null
                 }
-                <div className = 'invite-more-dialog separator' />
+                {/* <div className='invite-more-dialog separator' /> 
                 {
                     _liveStreamViewURL
-                        && <LiveStreamSection liveStreamViewURL = { _liveStreamViewURL } />
+                    && false && <LiveStreamSection liveStreamViewURL={_liveStreamViewURL} />
                 }
                 {
                     _phoneNumber
-                        && _dialInVisible
-                        && <DialInSection phoneNumber = { _phoneNumber } />
+                    && false && _dialInVisible
+                    && <DialInSection phoneNumber={_phoneNumber} />
                 }
                 {
-                    !_phoneNumber && _dialInVisible && _isDialInOverLimit && <DialInLimit />
-                }
+                    !_phoneNumber && _dialInVisible && _isDialInOverLimit && false && <DialInLimit />
+                }*/}
             </div>
         </Dialog>
     );
@@ -208,12 +208,16 @@ function mapStateToProps(state: IReduxState, ownProps: Partial<IProps>) {
         _dialInVisible: isSharingEnabled(sharingFeatures.dialIn),
         _urlSharingVisible: isDynamicBrandingDataLoaded(state) && isSharingEnabled(sharingFeatures.url),
         _emailSharingVisible: isSharingEnabled(sharingFeatures.email),
-        _invitationText: getInviteText({ state,
+        _invitationText: getInviteText({
+            state,
             phoneNumber,
-            t: ownProps.t }),
-        _invitationTextiOS: getInviteTextiOS({ state,
+            t: ownProps.t
+        }),
+        _invitationTextiOS: getInviteTextiOS({
+            state,
             phoneNumber,
-            t: ownProps.t }),
+            t: ownProps.t
+        }),
         _inviteAppName: inviteAppName,
         _inviteContactsVisible: interfaceConfig.ENABLE_DIAL_OUT && !hideInviteContacts,
         _inviteUrl: getInviteURL(state),

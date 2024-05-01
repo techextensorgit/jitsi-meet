@@ -77,11 +77,11 @@ const STATUS_REQ_CAP = 45;
  * @returns {Function}
  */
 function pollForStatus(
-        reqId: string,
-        onSuccess: Function,
-        onFail: Function,
-        count = 0) {
-    return async function(dispatch: IStore['dispatch'], getState: IStore['getState']) {
+    reqId: string,
+    onSuccess: Function,
+    onFail: Function,
+    count = 0) {
+    return async function (dispatch: IStore['dispatch'], getState: IStore['getState']) {
         const state = getState();
 
         try {
@@ -92,38 +92,38 @@ function pollForStatus(
             const res = await executeDialOutStatusRequest(getDialOutStatusUrl(state) ?? '', reqId);
 
             switch (res) {
-            case DIAL_OUT_STATUS.INITIATED:
-            case DIAL_OUT_STATUS.RINGING: {
-                dispatch(setDialOutStatus(dialOutStatusToKeyMap[res as keyof typeof dialOutStatusToKeyMap]));
+                case DIAL_OUT_STATUS.INITIATED:
+                case DIAL_OUT_STATUS.RINGING: {
+                    dispatch(setDialOutStatus(dialOutStatusToKeyMap[res as keyof typeof dialOutStatusToKeyMap]));
 
-                if (count < STATUS_REQ_CAP) {
-                    return setTimeout(() => {
-                        dispatch(pollForStatus(reqId, onSuccess, onFail, count + 1));
-                    }, STATUS_REQ_FREQUENCY);
+                    if (count < STATUS_REQ_CAP) {
+                        return setTimeout(() => {
+                            dispatch(pollForStatus(reqId, onSuccess, onFail, count + 1));
+                        }, STATUS_REQ_FREQUENCY);
+                    }
+
+                    return onFail();
                 }
 
-                return onFail();
-            }
+                case DIAL_OUT_STATUS.CONNECTED: {
+                    return onSuccess();
+                }
 
-            case DIAL_OUT_STATUS.CONNECTED: {
-                return onSuccess();
-            }
+                case DIAL_OUT_STATUS.DISCONNECTED: {
+                    dispatch(showErrorNotification({
+                        titleKey: 'prejoin.errorDialOutDisconnected'
+                    }, NOTIFICATION_TIMEOUT_TYPE.LONG));
 
-            case DIAL_OUT_STATUS.DISCONNECTED: {
-                dispatch(showErrorNotification({
-                    titleKey: 'prejoin.errorDialOutDisconnected'
-                }, NOTIFICATION_TIMEOUT_TYPE.LONG));
+                    return onFail();
+                }
 
-                return onFail();
-            }
+                case DIAL_OUT_STATUS.FAILED: {
+                    dispatch(showErrorNotification({
+                        titleKey: 'prejoin.errorDialOutFailed'
+                    }, NOTIFICATION_TIMEOUT_TYPE.LONG));
 
-            case DIAL_OUT_STATUS.FAILED: {
-                dispatch(showErrorNotification({
-                    titleKey: 'prejoin.errorDialOutFailed'
-                }, NOTIFICATION_TIMEOUT_TYPE.LONG));
-
-                return onFail();
-            }
+                    return onFail();
+                }
             }
         } catch (err) {
             dispatch(showErrorNotification({
@@ -147,7 +147,7 @@ function pollForStatus(
  * @returns {Function}
  */
 export function dialOut(onSuccess: Function, onFail: Function) {
-    return async function(dispatch: IStore['dispatch'], getState: IStore['getState']) {
+    return async function (dispatch: IStore['dispatch'], getState: IStore['getState']) {
         const state = getState();
         const reqId = uuidv4();
         const url = getDialOutUrl(state) ?? '';
@@ -197,7 +197,7 @@ export function dialOut(onSuccess: Function, onFail: Function) {
  * @returns {Function}
  */
 export function initPrejoin(tracks: Object[], errors: Object) {
-    return async function(dispatch: IStore['dispatch']) {
+    return async function (dispatch: IStore['dispatch']) {
         dispatch(setPrejoinDeviceErrors(errors));
         dispatch(prejoinInitialized());
 
@@ -215,8 +215,8 @@ export function initPrejoin(tracks: Object[], errors: Object) {
  * @returns {Function}
  */
 export function joinConference(options?: Object, ignoreJoiningInProgress = false,
-        jid?: string, password?: string) {
-    return async function(dispatch: IStore['dispatch'], getState: IStore['getState']) {
+    jid?: string, password?: string) {
+    return async function (dispatch: IStore['dispatch'], getState: IStore['getState']) {
         if (!ignoreJoiningInProgress) {
             const state = getState();
             const { joiningInProgress } = state['features/prejoin'];
@@ -241,7 +241,7 @@ export function joinConference(options?: Object, ignoreJoiningInProgress = false
                 // Always add the audio track on Safari because of a known issue where audio playout doesn't happen
                 // if the user joins audio and video muted.
                 if (track.muted && !(browser.isWebKitBased() && track.jitsiTrack
-                        && track.jitsiTrack.getType() === MEDIA_TYPE.AUDIO)) {
+                    && track.jitsiTrack.getType() === MEDIA_TYPE.AUDIO)) {
                     try {
                         await dispatch(replaceLocalTrack(track.jitsiTrack, null));
                     } catch (error) {
@@ -259,9 +259,9 @@ export function joinConference(options?: Object, ignoreJoiningInProgress = false
 
             APP.conference.startConference(jitsiTracks).catch(logger.error);
         })
-        .catch(() => {
-            // There is nothing to do here. This is handled and dispatched in base/connection/actions.
-        });
+            .catch(() => {
+                // There is nothing to do here. This is handled and dispatched in base/connection/actions.
+            });
     };
 }
 
@@ -286,7 +286,7 @@ export function setJoiningInProgress(value: boolean) {
  * @returns {Function}
  */
 export function joinConferenceWithoutAudio() {
-    return async function(dispatch: IStore['dispatch'], getState: IStore['getState']) {
+    return async function (dispatch: IStore['dispatch'], getState: IStore['getState']) {
         const state = getState();
         const { joiningInProgress } = state['features/prejoin'];
 
@@ -318,7 +318,7 @@ export function joinConferenceWithoutAudio() {
  * @returns {Function}
  */
 export function openDialInPage() {
-    return function(dispatch: IStore['dispatch'], getState: IStore['getState']) {
+    return function (dispatch: IStore['dispatch'], getState: IStore['getState']) {
         const dialInPage = getDialInfoPageURL(getState());
 
         openURLInBrowser(dialInPage, true);
@@ -374,11 +374,15 @@ export function replaceVideoTrackById(deviceId: string) {
         try {
             const tracks = getState()['features/base/tracks'];
             const wasVideoMuted = isVideoMutedByUser(getState());
-            const [ newTrack ] = await createLocalTracksF(
-                { cameraDeviceId: deviceId,
-                    devices: [ 'video' ] },
-                { dispatch,
-                    getState }
+            const [newTrack] = await createLocalTracksF(
+                {
+                    cameraDeviceId: deviceId,
+                    devices: ['video']
+                },
+                {
+                    dispatch,
+                    getState
+                }
             );
             const oldTrack = getLocalVideoTrack(tracks)?.jitsiTrack;
             const cameraDeviceId = newTrack.getDeviceId();

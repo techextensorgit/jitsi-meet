@@ -76,7 +76,39 @@ export function hangup(requestFeedback = false, feedbackTitle?: string) {
                 setTimeout(res, 1000);
             });
         }
+        // alert(feedbackTitle || "sorry")
+        // window.top.postMessage('endMeeting', '*')
+        if (feedbackTitle) {
+            if (feedbackTitle == "The meeting has been terminated")
+                window.top?.postMessage({ type: "endMeeting", value: true }, '*');
 
+
+            // const myHeaders = new Headers();
+            // myHeaders.append("Content-Type", "application/json");
+
+            // const raw = JSON.stringify({
+            //     "type": "MessageSent",
+            //     "meetingID": window.sessionStorage.getItem("meetingID"),
+            //     "data": {
+            //         "from": window.sessionStorage.getItem("name"),
+            //         "type": "groupchat",
+            //         "message": text,
+            //         "time": new Date()
+            //     }
+            // });
+
+            // const requestOptions : RequestInit = {
+            //     method: "POST",
+            //     headers: myHeaders,
+            //     body: raw,
+            //     redirect: undefined
+            // };
+
+            // fetch("https://elsa.techextensor.com/Jitsiwebhook/InsertMeetingEvent", requestOptions)
+            //     .then((response) => response.text())
+            //     .then((result) => console.log(result))
+            //     .catch((error) => console.log("error" + error));
+        }
         return APP.conference.hangup(requestFeedback, feedbackTitle);
     };
 }

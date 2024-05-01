@@ -63,7 +63,7 @@ const NotificationsContainer = ({
     _iAmSipGateway,
     _notifications,
     dispatch,
-    portal
+    portal,
 }: IProps) => {
     const { classes, cx } = useStyles();
 
@@ -77,17 +77,17 @@ const NotificationsContainer = ({
 
     return (
         <div
-            className = { cx(classes.container, {
+            className={cx(classes.container, {
                 [classes.containerPortal]: portal
-            }) }
-            id = 'notifications-container'>
+            })}
+            id='notifications-container'>
             <NotificationsTransition>
                 {_notifications.map(({ props, uid }) => (
                     <Notification
-                        { ...props }
-                        key = { uid }
-                        onDismissed = { _onDismissed }
-                        uid = { uid } />
+                        {...props}
+                        key={uid}
+                        onDismissed={_onDismissed}
+                        uid={uid} />
                 )) || null}
             </NotificationsTransition>
         </div>

@@ -13,6 +13,7 @@ interface IProps {
      * The body of the message.
      */
     text: string;
+
 }
 
 /**
@@ -41,6 +42,8 @@ class Message extends Component<IProps> {
         const { text } = this.props;
         const message: (string | ReactNode)[] = [];
 
+
+
         // Tokenize the text in order to avoid emoji substitution for URLs
         const tokens = text ? text.split(' ') : [];
 
@@ -51,8 +54,8 @@ class Message extends Component<IProps> {
             const url = text.substring(GIF_PREFIX.length, text.length - 1);
 
             content.push(<GifMessage
-                key = { url }
-                url = { url } />);
+                key={url}
+                url={url} />);
         } else {
             for (const token of tokens) {
 
@@ -70,7 +73,7 @@ class Message extends Component<IProps> {
 
         content.forEach((token, index) => {
             if (typeof token === 'string' && token !== ' ') {
-                message.push(<Linkify key = { `${token}-${index}` }>{ token }</Linkify>);
+                message.push(<Linkify key={`${token}-${index}`}>{token}</Linkify>);
             } else {
                 message.push(token);
             }
@@ -87,7 +90,7 @@ class Message extends Component<IProps> {
     render() {
         return (
             <>
-                { this._processMessage() }
+                {this._processMessage()}
             </>
         );
     }

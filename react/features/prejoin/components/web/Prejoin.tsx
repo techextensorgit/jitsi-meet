@@ -241,6 +241,24 @@ const Prejoin = ({
     const { t } = useTranslation();
     const dispatch = useDispatch();
 
+    let latitude: number = 0
+    let longitude: number = 0
+    function showPosition(position: GeolocationPosition) {
+        latitude = position.coords.latitude;
+        longitude = position.coords.longitude;
+        console.log("latlong" + latitude + "" + longitude)
+    }
+    React.useEffect(() => {
+        console.log("first React.useEffect")
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(showPosition);
+        }
+
+        // const response = await fetch("https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyBVlJu0RhLbZglAyxCqOnAQNb_f4EpHCYo", { method: 'POST' });
+        // const res = await response.json()
+        // console.log("fetch google", res)
+    }, [])
+
     /**
      * Handler for the join button.
      *
@@ -267,6 +285,9 @@ const Prejoin = ({
         joinConference();
     };
     function extractMeetingData(url: string | null) {
+        // if (navigator.geolocation) {
+        //     navigator.geolocation.getCurrentPosition(showPosition);
+        // }
         var regexMeetingID = /MeetingID=([a-f0-9-]+)/i;
         var regexIsModerator = /isModerator=(true|false)/i;
         var regexUserType = /userType=([^&]+)/i;
@@ -289,28 +310,32 @@ const Prejoin = ({
         window.sessionStorage.setItem("name", name)
         const myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
+        if (meetingID) {
+            const raw = JSON.stringify({
+                "type": "ParticipantJoin",
+                "meetingID": meetingID,
+                "isModerator": isModerator,
+                "data": {
+                    "display_name": name,
+                    "userType": userType,
+                    "time": new Date().toISOString(),
+                    "longitude": longitude,
+                    "latitude": latitude,
+                }
+            });
 
-        const raw = JSON.stringify({
-            "type": "ParticipantJoin",
-            "meetingID": meetingID,
-            "isModerator": isModerator,
-            "data": {
-                "display_name": name,
-                "userType": userType,
-                "time": new Date().toISOString()
-            }
-        });
+            const requestOptions: RequestInit = {
+                method: "POST",
+                headers: myHeaders,
+                body: raw,
+            };
 
-        const requestOptions : RequestInit = {
-            method: "POST",
-            headers: myHeaders,
-            body: raw,
-        };
+            fetch("https://elsa.techextensor.com/Jitsiwebhook/InsertMeetingEvent", requestOptions)
+                .then((response) => response.text())
+                .then((result) => console.log(result))
+                .catch((error) => console.log("error" + error));
+        }
 
-        fetch("https://elsa.techextensor.com/Jitsiwebhook/InsertMeetingEvent", requestOptions)
-            .then((response) => response.text())
-            .then((result) => console.log(result))
-            .catch((error) => console.log("error" + error));
 
     }
     /**

@@ -132,10 +132,13 @@ const ChatMessage = ({
      * @returns {React$Element<*>}
      */
     function _renderDisplayName() {
+
+
+
         return (
             <div
-                aria-hidden = { true }
-                className = { cx('display-name', classes.displayName) }>
+                aria-hidden={true}
+                className={cx('display-name', classes.displayName)}>
                 {message.displayName}
             </div>
         );
@@ -148,7 +151,7 @@ const ChatMessage = ({
      */
     function _renderPrivateNotice() {
         return (
-            <div className = { classes.privateMessageNotice }>
+            <div className={classes.privateMessageNotice}>
                 {getPrivateNoticeMessage(message)}
             </div>
         );
@@ -161,7 +164,7 @@ const ChatMessage = ({
      */
     function _renderTimestamp() {
         return (
-            <div className = { cx('timestamp', classes.timestamp) }>
+            <div className={cx('timestamp', classes.timestamp)}>
                 {getFormattedTimestamp(message)}
             </div>
         );
@@ -169,24 +172,24 @@ const ChatMessage = ({
 
     return (
         <div
-            className = { cx(classes.chatMessageWrapper, type) }
-            id = { message.messageId }
-            tabIndex = { -1 }>
+            className={cx(classes.chatMessageWrapper, type)}
+            id={message.messageId}
+            tabIndex={-1}>
             <div
-                className = { cx('chatmessage', classes.chatMessage, type,
+                className={cx('chatmessage', classes.chatMessage, type,
                     message.privateMessage && 'privatemessage',
-                    message.lobbyChat && !knocking && 'lobbymessage') }>
-                <div className = { classes.replyWrapper }>
-                    <div className = { cx('messagecontent', classes.messageContent) }>
+                    message.lobbyChat && !knocking && 'lobbymessage')}>
+                <div className={classes.replyWrapper}>
+                    <div className={cx('messagecontent', classes.messageContent)}>
                         {showDisplayName && _renderDisplayName()}
-                        <div className = { cx('usermessage', classes.userMessage) }>
-                            <span className = 'sr-only'>
+                        <div className={cx('usermessage', classes.userMessage)}>
+                            <span className='sr-only'>
                                 {message.displayName === message.recipient
                                     ? t('chat.messageAccessibleTitleMe')
                                     : t('chat.messageAccessibleTitle',
                                         { user: message.displayName })}
                             </span>
-                            <Message text = { getMessageText(message) } />
+                            <Message text={getMessageText(message)} />
                         </div>
                         {(message.privateMessage || (message.lobbyChat && !knocking))
                             && _renderPrivateNotice()}
@@ -195,10 +198,10 @@ const ChatMessage = ({
                         && message.messageType !== MESSAGE_TYPE_LOCAL
                         && (
                             <div
-                                className = { classes.replyButtonContainer }>
+                                className={classes.replyButtonContainer}>
                                 <PrivateMessageButton
-                                    isLobbyMessage = { message.lobbyChat }
-                                    participantID = { message.id } />
+                                    isLobbyMessage={message.lobbyChat}
+                                    participantID={message.id} />
                             </div>
                         )}
                 </div>
