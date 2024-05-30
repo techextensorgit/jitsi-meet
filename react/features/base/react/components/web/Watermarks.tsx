@@ -177,7 +177,7 @@ class Watermarks extends Component<IProps, State> {
                     <a
                         aria-label = { t('jitsiHome', { logo: interfaceConfig.APP_NAME }) }
                         className = { className }
-                        href = { _logoLink }
+                        // href = { _logoLink }
                         target = '_new'>
                         { reactElement }
                     </a>
@@ -201,7 +201,7 @@ class Watermarks extends Component<IProps, State> {
             return (
                 <a
                     className = 'poweredby'
-                    href = 'http://jitsi.org'
+                    // href = 'http://jitsi.org'
                     target = '_new'>
                     <span>{ t('poweredby') } jitsi.org</span>
                 </a>

@@ -172,14 +172,14 @@ const Chat = ({
     const onSendMessage = useCallback((text: string) => {
         console.log("messsage >>>>>>>>>>>>>>>>>" + text + window.sessionStorage.getItem("meetingID"))
         dispatch(sendMessage(text));
-        window.top?.postMessage({
-            type: "chatMessage", value: {
-                "from": window.sessionStorage.getItem("name"),
-                "type": "groupchat",
-                "message": text,
-                "time": new Date()
-            }
-        }, '*');
+        // window.top?.postMessage({
+        //     type: "chatMessage", value: {
+        //         "from": window.sessionStorage.getItem("name"),
+        //         "type": "groupchat",
+        //         "message": text,
+        //         "time": new Date()
+        //     }
+        // }, '*');
 
 
 

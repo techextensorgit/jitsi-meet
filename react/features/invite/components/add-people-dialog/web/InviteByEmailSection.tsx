@@ -67,8 +67,19 @@ function InviteByEmailSection({ inviteSubject, inviteText, inviteTextiOS }: IPro
     const dispatch = useDispatch();
     const { classes } = useStyles();
     const { t } = useTranslation();
+    const joinMeetingIndex = inviteText.indexOf("Join the meeting:");
+
+    // Extract everything from the start up to and including "Join the meeting:"
+    const extractedMessage = inviteText.substring(0, joinMeetingIndex + "Join the meeting:".length);
+
+    // Output the extracted message
+    console.log(extractedMessage);
+
+    const createCurrentUrl = "\nhttps://release-qa-tabpanel.techextensor.com/meeting?meetingId=" +
+        window.sessionStorage.getItem("meetingID") + "&url=" + window.location.href + '#userInfo.displayName=""&userInfo.email=""&MeetingID=' + window.sessionStorage.getItem("meetingID") + "&IsModerator=false"
+
     const encodedInviteSubject = encodeURIComponent(inviteSubject);
-    const encodedInviteText = encodeURIComponent(inviteText);
+    const encodedInviteText = encodeURIComponent(extractedMessage + createCurrentUrl);
     const encodedInviteTextiOS = encodeURIComponent(inviteTextiOS);
 
     const encodedDefaultEmailText = isIosMobileBrowser() ? encodedInviteTextiOS : encodedInviteText;
@@ -79,10 +90,12 @@ function InviteByEmailSection({ inviteSubject, inviteText, inviteTextiOS }: IPro
      * @returns {void}
      */
     function _onCopyText() {
+
+        alert(extractedMessage + createCurrentUrl)
         dispatch(showSuccessNotification({
             titleKey: 'dialog.copied'
         }, NOTIFICATION_TIMEOUT_TYPE.SHORT));
-        copyText(inviteText);
+        copyText(extractedMessage + createCurrentUrl);
     }
 
     /**
@@ -98,7 +111,7 @@ function InviteByEmailSection({ inviteSubject, inviteText, inviteTextiOS }: IPro
             dispatch(showSuccessNotification({
                 titleKey: 'dialog.copied'
             }, NOTIFICATION_TIMEOUT_TYPE.SHORT));
-            copyText(inviteText);
+            copyText(extractedMessage + createCurrentUrl);
         }
     }
 
@@ -138,16 +151,16 @@ function InviteByEmailSection({ inviteSubject, inviteText, inviteTextiOS }: IPro
                 {
                     PROVIDER_MAPPING.map(({ icon, tooltipKey, url }, idx) => (
                         <Tooltip
-                            content = { t(tooltipKey) }
-                            key = { idx }
-                            position = 'top'>
+                            content={t(tooltipKey)}
+                            key={idx}
+                            position='top'>
                             <a
-                                aria-label = { t(tooltipKey) }
-                                className = { classes.iconContainer }
-                                href = { url }
-                                rel = 'noopener noreferrer'
-                                target = '_blank'>
-                                <Icon src = { icon } />
+                                aria-label={t(tooltipKey)}
+                                className={classes.iconContainer}
+                                href={url}
+                                rel='noopener noreferrer'
+                                target='_blank'>
+                                <Icon src={icon} />
                             </a>
                         </Tooltip>
                     ))
@@ -159,22 +172,22 @@ function InviteByEmailSection({ inviteSubject, inviteText, inviteTextiOS }: IPro
 
     return (
         <>
-            <div className = { classes.container }>
-                <p className = { classes.label }>{t('addPeople.shareInvite')}</p>
-                <div className = { classes.iconRow }>
+            <div className={classes.container}>
+                <p className={classes.label}>{t('addPeople.shareInvite')}</p>
+                <div className={classes.iconRow}>
                     <Tooltip
-                        content = { t('addPeople.copyInvite') }
-                        position = 'top'>
+                        content={t('addPeople.copyInvite')}
+                        position='top'>
                         <div
-                            aria-label = { t('addPeople.copyInvite') }
-                            className = { classes.iconContainer }
+                            aria-label={t('addPeople.copyInvite')}
+                            className={classes.iconContainer}
                             // eslint-disable-next-line react/jsx-no-bind
-                            onClick = { _onCopyText }
+                            onClick={_onCopyText}
                             // eslint-disable-next-line react/jsx-no-bind
-                            onKeyPress = { _onCopyTextKeyPress }
-                            role = 'button'
-                            tabIndex = { 0 }>
-                            <Icon src = { IconCopy } />
+                            onKeyPress={_onCopyTextKeyPress}
+                            role='button'
+                            tabIndex={0}>
+                            <Icon src={IconCopy} />
                         </div>
                     </Tooltip>
                     {renderEmailIcons()}

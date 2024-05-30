@@ -148,6 +148,8 @@ function AddPeopleDialog({
     const inviteSubject = t('addPeople.inviteMoreMailSubject', {
         appName: _inviteAppName ?? interfaceConfig.APP_NAME
     });
+    const createCurrentUrl = "https://release-qa-tabpanel.techextensor.com/meeting?meetingId=" +
+        window.sessionStorage.getItem("meetingID") + "&url=" + _inviteUrl + '#userInfo.displayName=""&userInfo.email=""&MeetingID=' + window.sessionStorage.getItem("meetingID") + "&IsModerator=false"
 
     return (
         <Dialog
@@ -155,7 +157,7 @@ function AddPeopleDialog({
             ok={{ hidden: true }}
             titleKey='addPeople.inviteMorePrompt'>
             <div className='invite-more-dialog'>
-                {_inviteContactsVisible && <InviteContactsSection />}
+                {/* {_inviteContactsVisible && <InviteContactsSection />} */}
                 {_urlSharingVisible ? <CopyMeetingLinkSection url={_inviteUrl} /> : null}
                 {
                     _emailSharingVisible

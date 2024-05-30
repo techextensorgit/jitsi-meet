@@ -1,564 +1,612 @@
 /* eslint-disable react/jsx-no-bind */
-import React, { useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { connect, useDispatch } from 'react-redux';
-import { makeStyles } from 'tss-react/mui';
+import React, { useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { connect, useDispatch } from "react-redux";
+import { makeStyles } from "tss-react/mui";
 
-import { IReduxState } from '../../../app/types';
-import Avatar from '../../../base/avatar/components/Avatar';
-import { isNameReadOnly } from '../../../base/config/functions.web';
-import { IconArrowDown, IconArrowUp, IconPhoneRinging, IconVolumeOff } from '../../../base/icons/svg';
-import { isVideoMutedByUser } from '../../../base/media/functions';
-import { getLocalParticipant } from '../../../base/participants/functions';
-import Popover from '../../../base/popover/components/Popover.web';
-import ActionButton from '../../../base/premeeting/components/web/ActionButton';
-import PreMeetingScreen from '../../../base/premeeting/components/web/PreMeetingScreen';
-import { updateSettings } from '../../../base/settings/actions';
-import { getDisplayName } from '../../../base/settings/functions.web';
-import { withPixelLineHeight } from '../../../base/styles/functions.web';
-import { getLocalJitsiVideoTrack } from '../../../base/tracks/functions.web';
-import Button from '../../../base/ui/components/web/Button';
-import Input from '../../../base/ui/components/web/Input';
-import { BUTTON_TYPES } from '../../../base/ui/constants.any';
-import isInsecureRoomName from '../../../base/util/isInsecureRoomName';
-import { openDisplayNamePrompt } from '../../../display-name/actions';
-import { isUnsafeRoomWarningEnabled } from '../../../prejoin/functions';
+import { IReduxState } from "../../../app/types";
+import Avatar from "../../../base/avatar/components/Avatar";
+import { isNameReadOnly } from "../../../base/config/functions.web";
 import {
-    joinConference as joinConferenceAction,
-    joinConferenceWithoutAudio as joinConferenceWithoutAudioAction,
-    setJoinByPhoneDialogVisiblity as setJoinByPhoneDialogVisiblityAction
-} from '../../actions.web';
+  IconArrowDown,
+  IconArrowUp,
+  IconPhoneRinging,
+  IconVolumeOff,
+} from "../../../base/icons/svg";
+import { isVideoMutedByUser } from "../../../base/media/functions";
+import { getLocalParticipant } from "../../../base/participants/functions";
+import Popover from "../../../base/popover/components/Popover.web";
+import ActionButton from "../../../base/premeeting/components/web/ActionButton";
+import PreMeetingScreen from "../../../base/premeeting/components/web/PreMeetingScreen";
+import { updateSettings } from "../../../base/settings/actions";
+import { getDisplayName } from "../../../base/settings/functions.web";
+import { withPixelLineHeight } from "../../../base/styles/functions.web";
+import { getLocalJitsiVideoTrack } from "../../../base/tracks/functions.web";
+import Button from "../../../base/ui/components/web/Button";
+import Input from "../../../base/ui/components/web/Input";
+import { BUTTON_TYPES } from "../../../base/ui/constants.any";
+import isInsecureRoomName from "../../../base/util/isInsecureRoomName";
+import { openDisplayNamePrompt } from "../../../display-name/actions";
+import { isUnsafeRoomWarningEnabled } from "../../../prejoin/functions";
 import {
-    isDeviceStatusVisible,
-    isDisplayNameRequired,
-    isJoinByPhoneButtonVisible,
-    isJoinByPhoneDialogVisible,
-    isPrejoinDisplayNameVisible
-} from '../../functions';
-import { hasDisplayName } from '../../utils';
+  joinConference as joinConferenceAction,
+  joinConferenceWithoutAudio as joinConferenceWithoutAudioAction,
+  setJoinByPhoneDialogVisiblity as setJoinByPhoneDialogVisiblityAction,
+} from "../../actions.web";
+import {
+  isDeviceStatusVisible,
+  isDisplayNameRequired,
+  isJoinByPhoneButtonVisible,
+  isJoinByPhoneDialogVisible,
+  isPrejoinDisplayNameVisible,
+} from "../../functions";
+import { hasDisplayName } from "../../utils";
 
-import JoinByPhoneDialog from './dialogs/JoinByPhoneDialog';
+import JoinByPhoneDialog from "./dialogs/JoinByPhoneDialog";
 
 interface IProps {
+  /**
+   * Flag signaling if the device status is visible or not.
+   */
+  deviceStatusVisible: boolean;
 
-    /**
-     * Flag signaling if the device status is visible or not.
-     */
-    deviceStatusVisible: boolean;
+  /**
+   * If join by phone button should be visible.
+   */
+  hasJoinByPhoneButton: boolean;
 
-    /**
-     * If join by phone button should be visible.
-     */
-    hasJoinByPhoneButton: boolean;
+  /**
+   * Flag signaling if the display name is visible or not.
+   */
+  isDisplayNameVisible: boolean;
 
-    /**
-     * Flag signaling if the display name is visible or not.
-     */
-    isDisplayNameVisible: boolean;
+  /**
+   * Joins the current meeting.
+   */
+  joinConference: Function;
 
-    /**
-     * Joins the current meeting.
-     */
-    joinConference: Function;
+  /**
+   * Joins the current meeting without audio.
+   */
+  joinConferenceWithoutAudio: Function;
 
-    /**
-     * Joins the current meeting without audio.
-     */
-    joinConferenceWithoutAudio: Function;
+  /**
+   * Whether conference join is in progress.
+   */
+  joiningInProgress?: boolean;
 
-    /**
-     * Whether conference join is in progress.
-     */
-    joiningInProgress?: boolean;
+  /**
+   * The name of the user that is about to join.
+   */
+  name: string;
 
-    /**
-     * The name of the user that is about to join.
-     */
-    name: string;
+  /**
+   * Local participant id.
+   */
+  participantId?: string;
 
-    /**
-     * Local participant id.
-     */
-    participantId?: string;
+  /**
+   * The prejoin config.
+   */
+  prejoinConfig?: any;
 
-    /**
-     * The prejoin config.
-     */
-    prejoinConfig?: any;
+  /**
+   * Whether the name input should be read only or not.
+   */
+  readOnlyName: boolean;
 
-    /**
-     * Whether the name input should be read only or not.
-     */
-    readOnlyName: boolean;
+  /**
+   * Sets visibility of the 'JoinByPhoneDialog'.
+   */
+  setJoinByPhoneDialogVisiblity: Function;
 
-    /**
-     * Sets visibility of the 'JoinByPhoneDialog'.
-     */
-    setJoinByPhoneDialogVisiblity: Function;
+  /**
+   * Flag signaling the visibility of camera preview.
+   */
+  showCameraPreview: boolean;
 
-    /**
-     * Flag signaling the visibility of camera preview.
-     */
-    showCameraPreview: boolean;
+  /**
+   * If 'JoinByPhoneDialog' is visible or not.
+   */
+  showDialog: boolean;
 
-    /**
-     * If 'JoinByPhoneDialog' is visible or not.
-     */
-    showDialog: boolean;
+  /**
+   * If should show an error when joining without a name.
+   */
+  showErrorOnJoin: boolean;
 
-    /**
-     * If should show an error when joining without a name.
-     */
-    showErrorOnJoin: boolean;
+  /**
+   * If the recording warning is visible or not.
+   */
+  showRecordingWarning: boolean;
 
-    /**
-     * If the recording warning is visible or not.
-     */
-    showRecordingWarning: boolean;
+  /**
+   * If should show unsafe room warning when joining.
+   */
+  showUnsafeRoomWarning: boolean;
 
-    /**
-     * If should show unsafe room warning when joining.
-     */
-    showUnsafeRoomWarning: boolean;
+  /**
+   * Whether the user has approved to join a room with unsafe name.
+   */
+  unsafeRoomConsent?: boolean;
 
-    /**
-     * Whether the user has approved to join a room with unsafe name.
-     */
-    unsafeRoomConsent?: boolean;
+  /**
+   * Updates settings.
+   */
+  updateSettings: Function;
 
-    /**
-     * Updates settings.
-     */
-    updateSettings: Function;
-
-    /**
-     * The JitsiLocalTrack to display.
-     */
-    videoTrack?: Object;
+  /**
+   * The JitsiLocalTrack to display.
+   */
+  videoTrack?: Object;
 }
 
-const useStyles = makeStyles()(theme => {
-    return {
-        inputContainer: {
-            width: '100%'
-        },
+const useStyles = makeStyles()((theme) => {
+  return {
+    inputContainer: {
+      width: "100%",
+    },
 
-        input: {
-            width: '100%',
-            marginBottom: theme.spacing(3),
+    input: {
+      width: "100%",
+      marginBottom: theme.spacing(3),
 
-            '& input': {
-                textAlign: 'center'
-            }
-        },
+      "& input": {
+        textAlign: "center",
+      },
+    },
 
-        avatarContainer: {
-            display: 'flex',
-            alignItems: 'center',
-            flexDirection: 'column'
-        },
+    avatarContainer: {
+      display: "flex",
+      alignItems: "center",
+      flexDirection: "column",
+    },
 
-        avatar: {
-            margin: `${theme.spacing(2)} auto ${theme.spacing(3)}`
-        },
+    avatar: {
+      margin: `${theme.spacing(2)} auto ${theme.spacing(3)}`,
+    },
 
-        avatarName: {
-            ...withPixelLineHeight(theme.typography.bodyShortBoldLarge),
-            color: theme.palette.text01,
-            marginBottom: theme.spacing(5),
-            textAlign: 'center'
-        },
+    avatarName: {
+      ...withPixelLineHeight(theme.typography.bodyShortBoldLarge),
+      color: theme.palette.text01,
+      marginBottom: theme.spacing(5),
+      textAlign: "center",
+    },
 
-        error: {
-            backgroundColor: theme.palette.actionDanger,
-            color: theme.palette.text01,
-            borderRadius: theme.shape.borderRadius,
-            width: '100%',
-            ...withPixelLineHeight(theme.typography.labelRegular),
-            boxSizing: 'border-box',
-            padding: theme.spacing(1),
-            textAlign: 'center',
-            marginTop: `-${theme.spacing(2)}`,
-            marginBottom: theme.spacing(3)
-        },
+    error: {
+      backgroundColor: theme.palette.actionDanger,
+      color: theme.palette.text01,
+      borderRadius: theme.shape.borderRadius,
+      width: "100%",
+      ...withPixelLineHeight(theme.typography.labelRegular),
+      boxSizing: "border-box",
+      padding: theme.spacing(1),
+      textAlign: "center",
+      marginTop: `-${theme.spacing(2)}`,
+      marginBottom: theme.spacing(3),
+    },
 
-        dropdownContainer: {
-            position: 'relative',
-            width: '100%'
-        },
+    dropdownContainer: {
+      position: "relative",
+      width: "100%",
+    },
 
-        dropdownButtons: {
-            width: '300px',
-            padding: '8px 0',
-            backgroundColor: theme.palette.action02,
-            color: theme.palette.text04,
-            borderRadius: theme.shape.borderRadius,
-            position: 'relative',
-            top: `-${theme.spacing(3)}`,
+    dropdownButtons: {
+      width: "300px",
+      padding: "8px 0",
+      backgroundColor: theme.palette.action02,
+      color: theme.palette.text04,
+      borderRadius: theme.shape.borderRadius,
+      position: "relative",
+      top: `-${theme.spacing(3)}`,
 
-            '@media (max-width: 511px)': {
-                margin: '0 auto',
-                top: 0
-            },
+      "@media (max-width: 511px)": {
+        margin: "0 auto",
+        top: 0,
+      },
 
-            '@media (max-width: 420px)': {
-                top: 0,
-                width: 'calc(100% - 32px)'
-            }
-        }
-    };
+      "@media (max-width: 420px)": {
+        top: 0,
+        width: "calc(100% - 32px)",
+      },
+    },
+  };
 });
 
 const Prejoin = ({
-    deviceStatusVisible,
-    hasJoinByPhoneButton,
-    isDisplayNameVisible,
-    joinConference,
-    joinConferenceWithoutAudio,
-    joiningInProgress,
-    name,
-    participantId,
-    prejoinConfig,
-    readOnlyName,
-    setJoinByPhoneDialogVisiblity,
-    showCameraPreview,
-    showDialog,
-    showErrorOnJoin,
-    showRecordingWarning,
-    showUnsafeRoomWarning,
-    unsafeRoomConsent,
-    updateSettings: dispatchUpdateSettings,
-    videoTrack
+  deviceStatusVisible,
+  hasJoinByPhoneButton,
+  isDisplayNameVisible,
+  joinConference,
+  joinConferenceWithoutAudio,
+  joiningInProgress,
+  name,
+  participantId,
+  prejoinConfig,
+  readOnlyName,
+  setJoinByPhoneDialogVisiblity,
+  showCameraPreview,
+  showDialog,
+  showErrorOnJoin,
+  showRecordingWarning,
+  showUnsafeRoomWarning,
+  unsafeRoomConsent,
+  updateSettings: dispatchUpdateSettings,
+  videoTrack,
 }: IProps) => {
-    const showDisplayNameField = useMemo(
-        () => isDisplayNameVisible && !readOnlyName,
-        [isDisplayNameVisible, readOnlyName]);
-    const showErrorOnField = useMemo(
-        () => showDisplayNameField && showErrorOnJoin,
-        [showDisplayNameField, showErrorOnJoin]);
-    const [showJoinByPhoneButtons, setShowJoinByPhoneButtons] = useState(false);
-    const { classes } = useStyles();
-    const { t } = useTranslation();
-    const dispatch = useDispatch();
+  const showDisplayNameField = useMemo(
+    () => isDisplayNameVisible && !readOnlyName,
+    [isDisplayNameVisible, readOnlyName]
+  );
+  const showErrorOnField = useMemo(
+    () => showDisplayNameField && showErrorOnJoin,
+    [showDisplayNameField, showErrorOnJoin]
+  );
+  const [showJoinByPhoneButtons, setShowJoinByPhoneButtons] = useState(false);
+  const { classes } = useStyles();
+  const { t } = useTranslation();
+  const dispatch = useDispatch();
 
-    let latitude: number = 0
-    let longitude: number = 0
-    function showPosition(position: GeolocationPosition) {
-        latitude = position.coords.latitude;
-        longitude = position.coords.longitude;
-        console.log("latlong" + latitude + "" + longitude)
+  let latitude: number = 0;
+  let longitude: number = 0;
+  function showPosition(position: GeolocationPosition) {
+    latitude = position.coords.latitude;
+    longitude = position.coords.longitude;
+    console.log("latlong" + latitude + "" + longitude);
+    window.sessionStorage.setItem("latitude", latitude.toString() ?? "0");
+    window.sessionStorage.setItem("longitude", longitude.toString() ?? "0");
+  }
+  React.useEffect(() => {
+    console.log("first React.useEffect");
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(showPosition);
     }
-    React.useEffect(() => {
-        console.log("first React.useEffect")
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(showPosition);
-        }
 
-        // const response = await fetch("https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyBVlJu0RhLbZglAyxCqOnAQNb_f4EpHCYo", { method: 'POST' });
-        // const res = await response.json()
-        // console.log("fetch google", res)
-    }, [])
+    // const response = await fetch("https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyBVlJu0RhLbZglAyxCqOnAQNb_f4EpHCYo", { method: 'POST' });
+    // const res = await response.json()
+    // console.log("fetch google", res)
+  }, []);
 
-    /**
-     * Handler for the join button.
-     *
-     * @param {Object} e - The synthetic event.
-     * @returns {void}
-     */
-    const onJoinButtonClick = () => {
-        if (showErrorOnJoin) {
-            dispatch(openDisplayNamePrompt({
-                onPostSubmit: joinConference,
-                validateInput: hasDisplayName
-            }));
+  /**
+   * Handler for the join button.
+   *
+   * @param {Object} e - The synthetic event.
+   * @returns {void}
+   */
+  const onJoinButtonClick = () => {
+    if (showErrorOnJoin) {
+      dispatch(
+        openDisplayNamePrompt({
+          onPostSubmit: joinConference,
+          validateInput: hasDisplayName,
+        })
+      );
 
-            return;
-        }
-
-        console.log("onJoinButtonClick")
-
-
-
-
-        extractMeetingData(window.location.href);
-
-        joinConference();
-    };
-    function extractMeetingData(url: string | null) {
-        // if (navigator.geolocation) {
-        //     navigator.geolocation.getCurrentPosition(showPosition);
-        // }
-        var regexMeetingID = /MeetingID=([a-f0-9-]+)/i;
-        var regexIsModerator = /isModerator=(true|false)/i;
-        var regexUserType = /userType=([^&]+)/i;
-
-        let matchMeetingID = url?.match(regexMeetingID);
-        let matchIsModerator = url?.match(regexIsModerator);
-        let matchUserType = url?.match(regexUserType);
-
-
-        let meetingID = matchMeetingID?.[1] ?? null;
-        let isModerator = matchIsModerator?.[1] === 'true' ?? null;
-        let userType = matchUserType?.[1] ?? null;
-
-
-        console.log("custumUrl" + window.location.href); // Output: 169d904c-2a0c-411a-8051-5d79c23a6bf0
-        console.log("meetingID>>>>>>>>>>>>>>>>>>>>" + meetingID); // Output: 169d904c-2a0c-411a-8051-5d79c23a6bf0
-        window.sessionStorage.setItem("meetingID", meetingID ?? "")
-        window.sessionStorage.setItem("isModerator", String(isModerator))
-        window.sessionStorage.setItem("userType", userType ?? "")
-        window.sessionStorage.setItem("name", name)
-        const myHeaders = new Headers();
-        myHeaders.append("Content-Type", "application/json");
-        if (meetingID) {
-            const raw = JSON.stringify({
-                "type": "ParticipantJoin",
-                "meetingID": meetingID,
-                "isModerator": isModerator,
-                "data": {
-                    "display_name": name,
-                    "userType": userType,
-                    "time": new Date().toISOString(),
-                    "longitude": longitude,
-                    "latitude": latitude,
-                }
-            });
-
-            const requestOptions: RequestInit = {
-                method: "POST",
-                headers: myHeaders,
-                body: raw,
-            };
-
-            fetch("https://elsa.techextensor.com/Jitsiwebhook/InsertMeetingEvent", requestOptions)
-                .then((response) => response.text())
-                .then((result) => console.log(result))
-                .catch((error) => console.log("error" + error));
-        }
-
-
+      return;
     }
-    /**
-     * Closes the dropdown.
-     *
-     * @returns {void}
-     */
-    const onDropdownClose = () => {
-        setShowJoinByPhoneButtons(false);
+
+    console.log("onJoinButtonClick");
+
+    extractMeetingData(window.location.href);
+
+    joinConference();
+  };
+  function extractMeetingData(url: string | null) {
+    // if (navigator.geolocation) {
+    //     navigator.geolocation.getCurrentPosition(showPosition);
+    // }
+    var regexMeetingID = /MeetingID=([a-f0-9-]+)/i;
+    var regexIsModerator = /isModerator=(true|false)/i;
+    var regexUserId = /UserId=([^&]+)/i;
+
+    let matchMeetingID = url?.match(regexMeetingID);
+    let matchIsModerator = url?.match(regexIsModerator);
+    let matchUserId = url?.match(regexUserId);
+
+    let meetingID = matchMeetingID?.[1] ??null;
+    let isModerator = matchIsModerator?.[1] === "true" ?? null;
+    let UserId = matchUserId?.[1] ?? null;
+
+    console.log("custumUrl" + window.location.href); // Output: 169d904c-2a0c-411a-8051-5d79c23a6bf0
+    console.log("meetingID>>>>>>>>>>>>>>>>>>>>" + meetingID); // Output: 169d904c-2a0c-411a-8051-5d79c23a6bf0
+    window.sessionStorage.setItem("meetingID", meetingID ?? "");
+    window.sessionStorage.setItem("isModerator", String(isModerator));
+    window.sessionStorage.setItem("UserId", UserId ?? "");
+    window.sessionStorage.setItem("name", name);
+    if (meetingID) {
+        var requestOptions: RequestInit = {
+            method: "GET",
+            redirect: "follow",
+          };
+          fetch(
+            "https://maps.googleapis.com/maps/api/geocode/json?latlng=" +
+              Number(window.sessionStorage.getItem("latitude")) +
+              "," +
+              Number(window.sessionStorage.getItem("longitude")) +
+              "&sensor=true&key=AIzaSyBVlJu0RhLbZglAyxCqOnAQNb_f4EpHCYo",
+            requestOptions
+          )
+            .then((response) => response.text())
+            .then((result) => {
+              console.log(result);
+            
+      //44.4647452,7.3553838
+      const raw = JSON.stringify({
+        type: "ParticipantJoin",
+        meetingID: meetingID,
+        isModerator: isModerator,
+        data: {
+          display_name: name,
+          UserId: UserId,
+          time: new Date().toISOString(),
+          longitude: Number(window.sessionStorage.getItem("longitude")),
+          latitude: Number(window.sessionStorage.getItem("latitude")),
+          address:result
+        },
+      });
+      const myHeaders = new Headers();
+      myHeaders.append("Content-Type", "application/json");
+      var requestOptions: RequestInit = {
+        method: "POST",
+        headers: myHeaders,
+        body: raw,
+      };
+
+      // }
+      fetch(
+        "https://elsa.techextensor.com/Jitsiwebhook/InsertMeetingEvent",
+        requestOptions
+      )
+        .then((response) => response.text())
+        .then((result) => console.log(result))
+        .catch((error) => console.log("error" + error));
+    })
+    .catch((error) => console.error(error));
+    }
+   
+  }
+  /**
+   * Closes the dropdown.
+   *
+   * @returns {void}
+   */
+  const onDropdownClose = () => {
+    setShowJoinByPhoneButtons(false);
+  };
+
+  /**
+   * Displays the join by phone buttons dropdown.
+   *
+   * @param {Object} e - The synthetic event.
+   * @returns {void}
+   */
+  const onOptionsClick = (
+    e?: React.KeyboardEvent | React.MouseEvent | undefined
+  ) => {
+    e?.stopPropagation();
+
+    setShowJoinByPhoneButtons((show) => !show);
+  };
+
+  /**
+   * Sets the guest participant name.
+   *
+   * @param {string} displayName - Participant name.
+   * @returns {void}
+   */
+  const setName = (displayName: string) => {
+    dispatchUpdateSettings({
+      displayName,
+    });
+  };
+
+  /**
+   * Closes the join by phone dialog.
+   *
+   * @returns {undefined}
+   */
+  const closeDialog = () => {
+    setJoinByPhoneDialogVisiblity(false);
+  };
+
+  /**
+   * Displays the dialog for joining a meeting by phone.
+   *
+   * @returns {undefined}
+   */
+  const doShowDialog = () => {
+    setJoinByPhoneDialogVisiblity(true);
+    onDropdownClose();
+  };
+
+  /**
+   * KeyPress handler for accessibility.
+   *
+   * @param {Object} e - The key event to handle.
+   *
+   * @returns {void}
+   */
+  const showDialogKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === " " || e.key === "Enter") {
+      e.preventDefault();
+      doShowDialog();
+    }
+  };
+
+  /**
+   * KeyPress handler for accessibility.
+   *
+   * @param {Object} e - The key event to handle.
+   *
+   * @returns {void}
+   */
+  const onJoinConferenceWithoutAudioKeyPress = (e: React.KeyboardEvent) => {
+    if (joinConferenceWithoutAudio && (e.key === " " || e.key === "Enter")) {
+      e.preventDefault();
+      extractMeetingData(window.location.href);
+
+      joinConferenceWithoutAudio();
+    }
+  };
+
+  /**
+   * Gets the list of extra join buttons.
+   *
+   * @returns {Object} - The list of extra buttons.
+   */
+  const getExtraJoinButtons = () => {
+    const noAudio = {
+      key: "no-audio",
+      testId: "prejoin.joinWithoutAudio",
+      icon: IconVolumeOff,
+      label: t("prejoin.joinWithoutAudio"),
+      onClick: joinConferenceWithoutAudio,
+      onKeyPress: onJoinConferenceWithoutAudioKeyPress,
     };
 
-    /**
-     * Displays the join by phone buttons dropdown.
-     *
-     * @param {Object} e - The synthetic event.
-     * @returns {void}
-     */
-    const onOptionsClick = (e?: React.KeyboardEvent | React.MouseEvent | undefined) => {
-        e?.stopPropagation();
-
-        setShowJoinByPhoneButtons(show => !show);
+    const byPhone = {
+      key: "by-phone",
+      testId: "prejoin.joinByPhone",
+      icon: IconPhoneRinging,
+      label: t("prejoin.joinAudioByPhone"),
+      onClick: doShowDialog,
+      onKeyPress: showDialogKeyPress,
     };
 
-    /**
-     * Sets the guest participant name.
-     *
-     * @param {string} displayName - Participant name.
-     * @returns {void}
-     */
-    const setName = (displayName: string) => {
-        dispatchUpdateSettings({
-            displayName
-        });
+    return {
+      noAudio,
+      byPhone,
     };
+  };
 
-    /**
-     * Closes the join by phone dialog.
-     *
-     * @returns {undefined}
-     */
-    const closeDialog = () => {
-        setJoinByPhoneDialogVisiblity(false);
-    };
+  /**
+   * Handle keypress on input.
+   *
+   * @param {KeyboardEvent} e - Keyboard event.
+   * @returns {void}
+   */
+  const onInputKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      extractMeetingData(window.location.href);
 
-    /**
-     * Displays the dialog for joining a meeting by phone.
-     *
-     * @returns {undefined}
-     */
-    const doShowDialog = () => {
-        setJoinByPhoneDialogVisiblity(true);
-        onDropdownClose();
-    };
+      joinConference();
+    }
+  };
 
-    /**
-     * KeyPress handler for accessibility.
-     *
-     * @param {Object} e - The key event to handle.
-     *
-     * @returns {void}
-     */
-    const showDialogKeyPress = (e: React.KeyboardEvent) => {
-        if (e.key === ' ' || e.key === 'Enter') {
-            e.preventDefault();
-            doShowDialog();
-        }
-    };
+  const extraJoinButtons = getExtraJoinButtons();
+  let extraButtonsToRender = Object.values(extraJoinButtons).filter(
+    (val: any) => !(prejoinConfig?.hideExtraJoinButtons || []).includes(val.key)
+  );
 
-    /**
-     * KeyPress handler for accessibility.
-     *
-     * @param {Object} e - The key event to handle.
-     *
-     * @returns {void}
-     */
-    const onJoinConferenceWithoutAudioKeyPress = (e: React.KeyboardEvent) => {
-        if (joinConferenceWithoutAudio
-            && (e.key === ' '
-                || e.key === 'Enter')) {
-            e.preventDefault();
-            extractMeetingData(window.location.href);
-
-            joinConferenceWithoutAudio();
-        }
-    };
-
-    /**
-     * Gets the list of extra join buttons.
-     *
-     * @returns {Object} - The list of extra buttons.
-     */
-    const getExtraJoinButtons = () => {
-        const noAudio = {
-            key: 'no-audio',
-            testId: 'prejoin.joinWithoutAudio',
-            icon: IconVolumeOff,
-            label: t('prejoin.joinWithoutAudio'),
-            onClick: joinConferenceWithoutAudio,
-            onKeyPress: onJoinConferenceWithoutAudioKeyPress
-        };
-
-        const byPhone = {
-            key: 'by-phone',
-            testId: 'prejoin.joinByPhone',
-            icon: IconPhoneRinging,
-            label: t('prejoin.joinAudioByPhone'),
-            onClick: doShowDialog,
-            onKeyPress: showDialogKeyPress
-        };
-
-        return {
-            noAudio,
-            byPhone
-        };
-    };
-
-    /**
-     * Handle keypress on input.
-     *
-     * @param {KeyboardEvent} e - Keyboard event.
-     * @returns {void}
-     */
-    const onInputKeyPress = (e: React.KeyboardEvent) => {
-        if (e.key === 'Enter') {
-            extractMeetingData(window.location.href);
-
-            joinConference();
-        }
-    };
-
-    const extraJoinButtons = getExtraJoinButtons();
-    let extraButtonsToRender = Object.values(extraJoinButtons).filter((val: any) =>
-        !(prejoinConfig?.hideExtraJoinButtons || []).includes(val.key)
+  if (!hasJoinByPhoneButton) {
+    extraButtonsToRender = extraButtonsToRender.filter(
+      (btn: any) => btn.key !== "by-phone"
     );
+  }
+  const hasExtraJoinButtons = Boolean(extraButtonsToRender.length);
 
-    if (!hasJoinByPhoneButton) {
-        extraButtonsToRender = extraButtonsToRender.filter((btn: any) => btn.key !== 'by-phone');
-    }
-    const hasExtraJoinButtons = Boolean(extraButtonsToRender.length);
-
-    return (
-        <PreMeetingScreen
-            showDeviceStatus={deviceStatusVisible}
-            showRecordingWarning={showRecordingWarning}
-            showUnsafeRoomWarning={showUnsafeRoomWarning}
-            title={t('prejoin.joinMeeting')}
-            videoMuted={!showCameraPreview}
-            videoTrack={videoTrack}>
-            <div
-                className={classes.inputContainer}
-                data-testid='prejoin.screen'>
-                {showDisplayNameField ? (<Input
-                    accessibilityLabel={t('dialog.enterDisplayName')}
-                    autoComplete={'name'}
-                    autoFocus={true}
-                    className={classes.input}
-                    error={showErrorOnField}
-                    id='premeeting-name-input'
-                    onChange={setName}
-                    onKeyPress={showUnsafeRoomWarning && !unsafeRoomConsent ? undefined : onInputKeyPress}
-                    placeholder={t('dialog.enterDisplayName')}
-                    readOnly={readOnlyName}
-                    value={name} />
-                ) : (
-                    <div className={classes.avatarContainer}>
-                        <Avatar
-                            className={classes.avatar}
-                            displayName={name}
-                            participantId={participantId}
-                            size={72} />
-                        {isDisplayNameVisible && <div className={classes.avatarName}>{name}</div>}
-                    </div>
-                )}
-
-                {showErrorOnField && <div
-                    className={classes.error}
-                    data-testid='prejoin.errorMessage'>{t('prejoin.errorMissingName')}</div>}
-
-                <div className={classes.dropdownContainer}>
-                    <Popover
-                        content={hasExtraJoinButtons && <div className={classes.dropdownButtons}>
-                            {extraButtonsToRender.map(({ key, ...rest }) => (
-                                <Button
-                                    disabled={joiningInProgress || showErrorOnField}
-                                    fullWidth={true}
-                                    key={key}
-                                    type={BUTTON_TYPES.SECONDARY}
-                                    {...rest} />
-                            ))}
-                        </div>}
-                        onPopoverClose={onDropdownClose}
-                        position='bottom'
-                        trigger='click'
-                        visible={showJoinByPhoneButtons}>
-                        <ActionButton
-                            OptionsIcon={showJoinByPhoneButtons ? IconArrowUp : IconArrowDown}
-                            ariaDropDownLabel={t('prejoin.joinWithoutAudio')}
-                            ariaLabel={t('prejoin.joinMeeting')}
-                            ariaPressed={showJoinByPhoneButtons}
-                            disabled={joiningInProgress
-                                || (showUnsafeRoomWarning && !unsafeRoomConsent)
-                                || showErrorOnField}
-                            hasOptions={hasExtraJoinButtons}
-                            onClick={onJoinButtonClick}
-                            onOptionsClick={onOptionsClick}
-                            role='button'
-                            tabIndex={0}
-                            testId='prejoin.joinMeeting'
-                            type='primary'>
-                            {t('prejoin.joinMeeting')}
-                        </ActionButton>
-                    </Popover>
-                </div>
-            </div>
-            {showDialog && (
-                <JoinByPhoneDialog
-                    joinConferenceWithoutAudio={joinConferenceWithoutAudio}
-                    onClose={closeDialog} />
+  return (
+    <PreMeetingScreen
+      showDeviceStatus={deviceStatusVisible}
+      showRecordingWarning={showRecordingWarning}
+      showUnsafeRoomWarning={showUnsafeRoomWarning}
+      title={t("prejoin.joinMeeting")}
+      videoMuted={!showCameraPreview}
+      videoTrack={videoTrack}
+    >
+      <div className={classes.inputContainer} data-testid="prejoin.screen">
+        {showDisplayNameField ? (
+          <Input
+            accessibilityLabel={t("dialog.enterDisplayName")}
+            autoComplete={"name"}
+            autoFocus={true}
+            className={classes.input}
+            error={showErrorOnField}
+            id="premeeting-name-input"
+            onChange={setName}
+            onKeyPress={
+              showUnsafeRoomWarning && !unsafeRoomConsent
+                ? undefined
+                : onInputKeyPress
+            }
+            placeholder={t("dialog.enterDisplayName")}
+            readOnly={readOnlyName}
+            value={name}
+          />
+        ) : (
+          <div className={classes.avatarContainer}>
+            <Avatar
+              className={classes.avatar}
+              displayName={name}
+              participantId={participantId}
+              size={72}
+            />
+            {isDisplayNameVisible && (
+              <div className={classes.avatarName}>{name}</div>
             )}
-        </PreMeetingScreen>
-    );
-};
+          </div>
+        )}
 
+        {showErrorOnField && (
+          <div className={classes.error} data-testid="prejoin.errorMessage">
+            {t("prejoin.errorMissingName")}
+          </div>
+        )}
+
+        <div className={classes.dropdownContainer}>
+          <Popover
+            content={
+              hasExtraJoinButtons && (
+                <div className={classes.dropdownButtons}>
+                  {extraButtonsToRender.map(({ key, ...rest }) => (
+                    <Button
+                      disabled={joiningInProgress || showErrorOnField}
+                      fullWidth={true}
+                      key={key}
+                      type={BUTTON_TYPES.SECONDARY}
+                      {...rest}
+                    />
+                  ))}
+                </div>
+              )
+            }
+            onPopoverClose={onDropdownClose}
+            position="bottom"
+            trigger="click"
+            visible={showJoinByPhoneButtons}
+          >
+            <ActionButton
+              OptionsIcon={showJoinByPhoneButtons ? IconArrowUp : IconArrowDown}
+              ariaDropDownLabel={t("prejoin.joinWithoutAudio")}
+              ariaLabel={t("prejoin.joinMeeting")}
+              ariaPressed={showJoinByPhoneButtons}
+              disabled={
+                joiningInProgress ||
+                (showUnsafeRoomWarning && !unsafeRoomConsent) ||
+                showErrorOnField
+              }
+              hasOptions={hasExtraJoinButtons}
+              onClick={onJoinButtonClick}
+              onOptionsClick={onOptionsClick}
+              role="button"
+              tabIndex={0}
+              testId="prejoin.joinMeeting"
+              type="primary"
+            >
+              {t("prejoin.joinMeeting")}
+            </ActionButton>
+          </Popover>
+        </div>
+      </div>
+      {showDialog && (
+        <JoinByPhoneDialog
+          joinConferenceWithoutAudio={joinConferenceWithoutAudio}
+          onClose={closeDialog}
+        />
+      )}
+    </PreMeetingScreen>
+  );
+};
 
 /**
  * Maps (parts of) the redux state to the React {@code Component} props.
@@ -567,38 +615,40 @@ const Prejoin = ({
  * @returns {Object}
  */
 function mapStateToProps(state: IReduxState) {
-    const name = getDisplayName(state);
-    const showErrorOnJoin = isDisplayNameRequired(state) && !name;
-    const { id: participantId } = getLocalParticipant(state) ?? {};
-    const { joiningInProgress } = state['features/prejoin'];
-    const { room } = state['features/base/conference'];
-    const { unsafeRoomConsent } = state['features/base/premeeting'];
-    const { showPrejoinWarning: showRecordingWarning } = state['features/base/config'].recordings ?? {};
+  const name = getDisplayName(state);
+  const showErrorOnJoin = isDisplayNameRequired(state) && !name;
+  const { id: participantId } = getLocalParticipant(state) ?? {};
+  const { joiningInProgress } = state["features/prejoin"];
+  const { room } = state["features/base/conference"];
+  const { unsafeRoomConsent } = state["features/base/premeeting"];
+  const { showPrejoinWarning: showRecordingWarning } =
+    state["features/base/config"].recordings ?? {};
 
-    return {
-        deviceStatusVisible: isDeviceStatusVisible(state),
-        hasJoinByPhoneButton: isJoinByPhoneButtonVisible(state),
-        isDisplayNameVisible: isPrejoinDisplayNameVisible(state),
-        joiningInProgress,
-        name,
-        participantId,
-        prejoinConfig: state['features/base/config'].prejoinConfig,
-        readOnlyName: isNameReadOnly(state),
-        showCameraPreview: !isVideoMutedByUser(state),
-        showDialog: isJoinByPhoneDialogVisible(state),
-        showErrorOnJoin,
-        showRecordingWarning: Boolean(showRecordingWarning),
-        showUnsafeRoomWarning: isInsecureRoomName(room) && isUnsafeRoomWarningEnabled(state),
-        unsafeRoomConsent,
-        videoTrack: getLocalJitsiVideoTrack(state)
-    };
+  return {
+    deviceStatusVisible: isDeviceStatusVisible(state),
+    hasJoinByPhoneButton: isJoinByPhoneButtonVisible(state),
+    isDisplayNameVisible: isPrejoinDisplayNameVisible(state),
+    joiningInProgress,
+    name,
+    participantId,
+    prejoinConfig: state["features/base/config"].prejoinConfig,
+    readOnlyName: isNameReadOnly(state),
+    showCameraPreview: !isVideoMutedByUser(state),
+    showDialog: isJoinByPhoneDialogVisible(state),
+    showErrorOnJoin,
+    showRecordingWarning: Boolean(showRecordingWarning),
+    showUnsafeRoomWarning:
+      isInsecureRoomName(room) && isUnsafeRoomWarningEnabled(state),
+    unsafeRoomConsent,
+    videoTrack: getLocalJitsiVideoTrack(state),
+  };
 }
 
 const mapDispatchToProps = {
-    joinConferenceWithoutAudio: joinConferenceWithoutAudioAction,
-    joinConference: joinConferenceAction,
-    setJoinByPhoneDialogVisiblity: setJoinByPhoneDialogVisiblityAction,
-    updateSettings
+  joinConferenceWithoutAudio: joinConferenceWithoutAudioAction,
+  joinConference: joinConferenceAction,
+  setJoinByPhoneDialogVisiblity: setJoinByPhoneDialogVisiblityAction,
+  updateSettings,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Prejoin);
