@@ -172,32 +172,42 @@ const Chat = ({
     const onSendMessage = useCallback((text: string) => {
         console.log("messsage >>>>>>>>>>>>>>>>>" + text + window.sessionStorage.getItem("meetingID"))
         dispatch(sendMessage(text));
+        // window.top?.postMessage({
+        //     type: "chatMessage", value: {
+        //         "from": window.sessionStorage.getItem("name"),
+        //         "type": "groupchat",
+        //         "message": text,
+        //         "time": new Date()
+        //     }
+        // }, '*');
 
-        const myHeaders = new Headers();
-        myHeaders.append("Content-Type", "application/json");
 
-        const raw = JSON.stringify({
-            "type": "MessageSent",
-            "meetingID": window.sessionStorage.getItem("meetingID"),
-            "data": {
-                "from": window.sessionStorage.getItem("name"),
-                "type": "groupchat",
-                "message": text,
-                "time": new Date()
-            }
-        });
 
-        const requestOptions : RequestInit = {
-            method: "POST",
-            headers: myHeaders,
-            body: raw,
-            redirect: undefined
-        };
+        // const myHeaders = new Headers();
+        // myHeaders.append("Content-Type", "application/json");
 
-        fetch("https://elsa.techextensor.com/Jitsiwebhook/InsertMeetingEvent", requestOptions)
-            .then((response) => response.text())
-            .then((result) => console.log(result))
-            .catch((error) => console.log("error" + error));
+        // const raw = JSON.stringify({
+        //     "type": "MessageSent",
+        //     "meetingID": window.sessionStorage.getItem("meetingID"),
+        //     "data": {
+        //         "from": window.sessionStorage.getItem("name"),
+        //         "type": "groupchat",
+        //         "message": text,
+        //         "time": new Date()
+        //     }
+        // });
+
+        // const requestOptions : RequestInit = {
+        //     method: "POST",
+        //     headers: myHeaders,
+        //     body: raw,
+        //     redirect: undefined
+        // };
+
+        // fetch("https://elsa.techextensor.com/Jitsiwebhook/InsertMeetingEvent", requestOptions)
+        //     .then((response) => response.text())
+        //     .then((result) => console.log(result))
+        //     .catch((error) => console.log("error" + error));
 
     }, []);
 

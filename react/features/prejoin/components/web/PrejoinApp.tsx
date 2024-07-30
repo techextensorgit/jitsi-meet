@@ -48,8 +48,10 @@ export default class PrejoinApp extends BaseApp<Props> {
 
         const { startWithAudioMuted, startWithVideoMuted } = store
             ? store.getState()['features/base/settings']
-            : { startWithAudioMuted: undefined,
-                startWithVideoMuted: undefined };
+            : {
+                startWithAudioMuted: undefined,
+                startWithVideoMuted: undefined
+            };
         const { locationURL } = store
             ? store.getState()['features/base/connection']
             : { locationURL: undefined };
@@ -82,7 +84,7 @@ export default class PrejoinApp extends BaseApp<Props> {
         return (
             <JitsiThemeProvider>
                 <GlobalStyles />
-                { super._createMainElement(component, props) }
+                {super._createMainElement(component, props)}
             </JitsiThemeProvider>
         );
     }

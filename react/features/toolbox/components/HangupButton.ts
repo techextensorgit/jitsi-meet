@@ -7,7 +7,7 @@ import { leaveConference } from '../../base/conference/actions';
 import { translate } from '../../base/i18n/functions';
 import { IProps as AbstractButtonProps } from '../../base/toolbox/components/AbstractButton';
 import AbstractHangupButton from '../../base/toolbox/components/AbstractHangupButton';
-
+ 
 /**
  * Component that renders a toolbar button for leaving the current conference.
  *
@@ -47,9 +47,12 @@ class HangupButton extends AbstractHangupButton<AbstractButtonProps> {
 
 
         this._hangup();
+        // window.top?.postMessage( "endMeeting", '*');
 
-        const myHeaders = new Headers();
-        myHeaders.append("Content-Type", "application/json");
+       
+
+        // const myHeaders = new Headers();
+        // myHeaders.append("Content-Type", "application/json");
 
         const raw = JSON.stringify({
             "type": "ParticipantLeave",
@@ -59,18 +62,19 @@ class HangupButton extends AbstractHangupButton<AbstractButtonProps> {
                 "time": new Date()
             }
         });
+        window.top?.postMessage({ type: "endMeeting", value: raw }, '*');
+    //     const requestOptions : RequestInit = {
+    //         method: "POST",
+    //         headers: myHeaders,
+    //         body: raw,
+    //         redirect: "follow",
+    //         referrer:""
+    //     };
 
-        const requestOptions : RequestInit = {
-            method: "POST",
-            headers: myHeaders,
-            body: raw,
-            redirect: "follow"
-        };
-
-        fetch("https://elsa.techextensor.com/Jitsiwebhook/InsertMeetingEvent", requestOptions)
-            .then((response) => response.text())
-            .then((result) => console.log(result))
-            .catch((error) => console.log("error" + error));
+    //     fetch("https://elsa.techextensor.com/Jitsiwebhook/InsertMeetingEvent", requestOptions)
+    //         .then((response) => response.text())
+    //         .then((result) => console.log(result))
+    //         .catch((error) => console.log("error" + error));
 
     }
 }

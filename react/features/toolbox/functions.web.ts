@@ -33,6 +33,7 @@ import HelpButton from './components/HelpButton';
 import AudioSettingsButton from './components/web/AudioSettingsButton';
 import CustomOptionButton from './components/web/CustomOptionButton';
 import FullscreenButton from './components/web/FullscreenButton';
+// import FullscreenShot from './components/web/FullscreenShot';
 import LinkToSalesforceButton from './components/web/LinkToSalesforceButton';
 import ProfileButton from './components/web/ProfileButton';
 import ShareDesktopButton from './components/web/ShareDesktopButton';
@@ -85,14 +86,14 @@ export function isToolboxVisible(state: IReduxState) {
     const whiteboardVisible = isWhiteboardVisible(state);
 
     return Boolean(!iAmRecorder && !iAmSipGateway
-            && (
-                timeoutID
-                || visible
-                || alwaysVisible
-                || audioSettingsVisible
-                || videoSettingsVisible
-                || whiteboardVisible
-            ));
+        && (
+            timeoutID
+            || visible
+            || alwaysVisible
+            || audioSettingsVisible
+            || videoSettingsVisible
+            || whiteboardVisible
+        ));
 }
 
 /**
@@ -200,7 +201,7 @@ export function getAllToolboxButtons(_customToolbarButtons?: {
     icon: string;
     id: string;
     text: string;
-    }[]): { [key: string]: IToolboxButton; } {
+}[]): { [key: string]: IToolboxButton; } {
 
     const microphone = {
         key: 'microphone',
@@ -283,6 +284,11 @@ export function getAllToolboxButtons(_customToolbarButtons?: {
         group: 2
     };
 
+    // const fullshot = {
+    //     key: 'fullshot',
+    //     Content: FullscreenShot,
+    //     group: 2
+    // };
     const security = {
         key: 'security',
         alias: 'info',
@@ -314,17 +320,17 @@ export function getAllToolboxButtons(_customToolbarButtons?: {
         group: 2
     };
 
-    const shareVideo = {
-        key: 'sharedvideo',
-        Content: SharedVideoButton,
-        group: 3
-    };
+    // const shareVideo = {
+    //     key: 'sharedvideo',
+    //     Content: SharedVideoButton,
+    //     group: 3
+    // };
 
-    const shareAudio = {
-        key: 'shareaudio',
-        Content: ShareAudioButton,
-        group: 3
-    };
+    // const shareAudio = {
+    //     key: 'shareaudio',
+    //     Content: ShareAudioButton,
+    //     group: 3
+    // };
 
     const noiseSuppression = {
         key: 'noisesuppression',
@@ -369,11 +375,11 @@ export function getAllToolboxButtons(_customToolbarButtons?: {
         group: 4
     };
 
-    const embed = {
-        key: 'embedmeeting',
-        Content: EmbedMeetingButton,
-        group: 4
-    };
+    // const embed = {
+    //     key: 'embedmeeting',
+    //     Content: EmbedMeetingButton,
+    //     group: 4
+    // };
 
     const feedback = {
         key: 'feedback',
@@ -421,13 +427,14 @@ export function getAllToolboxButtons(_customToolbarButtons?: {
         toggleCamera,
         videoQuality,
         fullscreen,
+        // fullshot,
         security,
         cc,
         recording,
         livestreaming,
         linkToSalesforce,
-        shareVideo,
-        shareAudio,
+        // shareVideo,
+        // shareAudio,
         noiseSuppression,
         whiteboard,
         etherpad,
@@ -435,7 +442,7 @@ export function getAllToolboxButtons(_customToolbarButtons?: {
         speakerStats,
         settings,
         shortcuts,
-        embed,
+        // embed,
         feedback,
         download,
         help,

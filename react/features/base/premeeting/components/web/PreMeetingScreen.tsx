@@ -16,6 +16,7 @@ import ConnectionStatus from './ConnectionStatus';
 import Preview from './Preview';
 import RecordingWarning from './RecordingWarning';
 import UnsafeRoomWarning from './UnsafeRoomWarning';
+import Watermarks from '../../../react/components/web/Watermarks';
 
 interface IProps {
 
@@ -195,6 +196,17 @@ const PreMeetingScreen = ({
                     <ConnectionStatus />
 
                     <div className = { classes.contentControls }>
+
+                <div
+                    // className = 'watermark rightwatermark'
+                    style = {  {
+                        width: "130px",
+                        height: "32px",
+                        backgroundPosition: "center left",
+                        backgroundRepeat: "no-repeat",
+                        backgroundSize: "contain",
+                        backgroundImage: 'url(images/watermark.svg)'
+                    } } />
                         <h1 className = { classes.title }>
                             {title}
                         </h1>

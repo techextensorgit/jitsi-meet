@@ -91,29 +91,29 @@ export default class MessageContainer extends AbstractMessageContainer<IProps, I
 
             return (
                 <ChatMessageGroup
-                    className = { messageType || MESSAGE_TYPE_REMOTE }
-                    key = { index }
-                    messages = { group } />
+                    className={messageType || MESSAGE_TYPE_REMOTE}
+                    key={index}
+                    messages={group} />
             );
         });
 
         return (
-            <div id = 'chat-conversation-container'>
+            <div id='chat-conversation-container'>
                 <div
-                    aria-labelledby = 'chat-header'
-                    id = 'chatconversation'
-                    onScroll = { this._onChatScroll }
-                    ref = { this._messageListRef }
-                    role = 'log'
-                    tabIndex = { 0 }>
-                    { messages }
+                    aria-labelledby='chat-header'
+                    id='chatconversation'
+                    onScroll={this._onChatScroll}
+                    ref={this._messageListRef}
+                    role='log'
+                    tabIndex={0}>
+                    {messages}
 
-                    { !this.state.isScrolledToBottom && this.state.hasNewMessages
+                    {!this.state.isScrolledToBottom && this.state.hasNewMessages
                         && <NewMessagesButton
-                            onGoToFirstUnreadMessage = { this._onGoToFirstUnreadMessage } /> }
+                            onGoToFirstUnreadMessage={this._onGoToFirstUnreadMessage} />}
                     <div
-                        id = 'messagesListEnd'
-                        ref = { this._messagesListEndRef } />
+                        id='messagesListEnd'
+                        ref={this._messagesListEndRef} />
                 </div>
             </div>
         );
@@ -208,7 +208,7 @@ export default class MessageContainer extends AbstractMessageContainer<IProps, I
      */
     _onGoToFirstUnreadMessage() {
         const firstUnreadMessage = this._findFirstUnreadMessage();
-
+        console.log("_onGoToFirstUnreadMessage")
         this.setState({ lastReadMessageId: firstUnreadMessage?.id || null });
         this.scrollToElement(true, firstUnreadMessage as Element);
     }
@@ -278,7 +278,7 @@ export default class MessageContainer extends AbstractMessageContainer<IProps, I
         const messagesNodeList = document.querySelectorAll('.chatmessage-wrapper');
 
         // @ts-ignore
-        const messagesToArray = [ ...messagesNodeList ];
+        const messagesToArray = [...messagesNodeList];
 
         const previousIndex = messagesToArray.findIndex((message: Element) =>
             message.id === this.state.lastReadMessageId);

@@ -199,7 +199,7 @@ const Notification = ({
 
     const onDismiss = useCallback(() => {
         onDismissed(uid);
-    }, [ uid ]);
+    }, [uid]);
 
     // eslint-disable-next-line react/no-multi-comp
     const renderDescription = useCallback(() => {
@@ -220,130 +220,131 @@ const Notification = ({
         // the id is used for testing the UI
         return (
             <div
-                className = { classes.description }
-                data-testid = { descriptionKey } >
-                {shouldRenderHtml ? descriptionArray : <Message text = { descriptionArray.join(' ') } />}
+                className={classes.description}
+                data-testid={descriptionKey} >
+                {shouldRenderHtml ? descriptionArray : <Message text={descriptionArray.join(' ')} />}
                 {typeof description === 'object' && description}
             </div>
         );
-    }, [ description, descriptionArguments, descriptionKey, classes ]);
+    }, [description, descriptionArguments, descriptionKey, classes]);
 
     const _onOpenSupportLink = () => {
         window.open(interfaceConfig.SUPPORT_URL, '_blank', 'noopener');
     };
 
     const mapAppearanceToButtons = useCallback((): {
-        content: string; onClick: () => void; testId?: string; type?: string; }[] => {
+        content: string; onClick: () => void; testId?: string; type?: string;
+    }[] => {
         switch (appearance) {
-        case NOTIFICATION_TYPE.ERROR: {
-            const buttons = [
-                {
-                    content: t('dialog.dismiss'),
-                    onClick: onDismiss
+            case NOTIFICATION_TYPE.ERROR: {
+                const buttons = [
+                    {
+                        content: t('dialog.dismiss'),
+                        onClick: onDismiss
+                    }
+                ];
+
+                if (!hideErrorSupportLink && interfaceConfig.SUPPORT_URL) {
+                    buttons.push({
+                        content: t('dialog.contactSupport'),
+                        onClick: _onOpenSupportLink
+                    });
                 }
-            ];
 
-            if (!hideErrorSupportLink && interfaceConfig.SUPPORT_URL) {
-                buttons.push({
-                    content: t('dialog.contactSupport'),
-                    onClick: _onOpenSupportLink
-                });
+                return buttons;
             }
+            case NOTIFICATION_TYPE.WARNING:
+                return [
+                    {
+                        content: t('dialog.Ok'),
+                        onClick: onDismiss
+                    }
+                ];
 
-            return buttons;
-        }
-        case NOTIFICATION_TYPE.WARNING:
-            return [
-                {
-                    content: t('dialog.Ok'),
-                    onClick: onDismiss
+            default:
+                if (customActionNameKey?.length && customActionHandler?.length) {
+                    return customActionNameKey.map((customAction: string, customActionIndex: number) => {
+                        return {
+                            content: t(customAction),
+                            onClick: () => {
+                                if (customActionHandler?.[customActionIndex]()) {
+                                    onDismiss();
+                                }
+                            },
+                            type: customActionType?.[customActionIndex],
+                            testId: customAction
+                        };
+                    });
                 }
-            ];
 
-        default:
-            if (customActionNameKey?.length && customActionHandler?.length) {
-                return customActionNameKey.map((customAction: string, customActionIndex: number) => {
-                    return {
-                        content: t(customAction),
-                        onClick: () => {
-                            if (customActionHandler?.[customActionIndex]()) {
-                                onDismiss();
-                            }
-                        },
-                        type: customActionType?.[customActionIndex],
-                        testId: customAction
-                    };
-                });
-            }
-
-            return [];
+                return [];
         }
-    }, [ appearance, onDismiss, customActionHandler, customActionNameKey, hideErrorSupportLink ]);
+    }, [appearance, onDismiss, customActionHandler, customActionNameKey, hideErrorSupportLink]);
 
     const getIcon = useCallback(() => {
         let iconToDisplay;
 
         switch (icon || appearance) {
-        case NOTIFICATION_ICON.ERROR:
-        case NOTIFICATION_ICON.WARNING:
-            iconToDisplay = IconWarningCircle;
-            break;
-        case NOTIFICATION_ICON.SUCCESS:
-            iconToDisplay = IconCheck;
-            break;
-        case NOTIFICATION_ICON.MESSAGE:
-            iconToDisplay = IconMessage;
-            break;
-        case NOTIFICATION_ICON.PARTICIPANT:
-            iconToDisplay = IconUser;
-            break;
-        case NOTIFICATION_ICON.PARTICIPANTS:
-            iconToDisplay = IconUsers;
-            break;
-        default:
-            iconToDisplay = IconInfo;
-            break;
+            case NOTIFICATION_ICON.ERROR:
+            case NOTIFICATION_ICON.WARNING:
+                iconToDisplay = IconWarningCircle;
+                break;
+            case NOTIFICATION_ICON.SUCCESS:
+                iconToDisplay = IconCheck;
+                break;
+            case NOTIFICATION_ICON.MESSAGE:
+                iconToDisplay = IconMessage;
+                break;
+            case NOTIFICATION_ICON.PARTICIPANT:
+                iconToDisplay = IconUser;
+                break;
+            case NOTIFICATION_ICON.PARTICIPANTS:
+                iconToDisplay = IconUsers;
+                break;
+            default:
+                iconToDisplay = IconInfo;
+                break;
         }
 
         return iconToDisplay;
-    }, [ icon, appearance ]);
+    }, [icon, appearance]);
 
     return (
         <div
-            className = { cx(classes.container, unmounting.get(uid ?? '') && 'unmount') }
-            data-testid = { titleKey || descriptionKey }
-            id = { uid }>
-            <div className = { cx(classes.ribbon, appearance) } />
-            <div className = { classes.content }>
-                <div className = { icon }>
+            className={cx(classes.container, unmounting.get(uid ?? '') && 'unmount')}
+            data-testid={titleKey || descriptionKey}
+            id={uid}>
+            <div className={cx(classes.ribbon, appearance)} />
+            <div className={classes.content}>
+                <div className={icon}>
                     <Icon
-                        color = { ICON_COLOR[appearance as keyof typeof ICON_COLOR] }
-                        size = { 20 }
-                        src = { getIcon() } />
+                        color={ICON_COLOR[appearance as keyof typeof ICON_COLOR]}
+                        size={20}
+                        src={getIcon()} />
                 </div>
-                <div className = { classes.textContainer }>
-                    <span className = { classes.title }>{title || t(titleKey ?? '', titleArguments)}</span>
+                <div className={classes.textContainer}>
+                    <span className={classes.title}>{title || t(titleKey ?? '', titleArguments)}</span>
                     {renderDescription()}
-                    <div className = { classes.actionsContainer }>
+                    <div className={classes.actionsContainer}>
                         {mapAppearanceToButtons().map(({ content, onClick, type, testId }) => (
                             <button
-                                className = { cx(classes.action, type) }
-                                data-testid = { testId }
-                                key = { content }
-                                onClick = { onClick }>
+                                className={cx(classes.action, type)}
+                                data-testid={testId}
+                                key={content}
+                                onClick={onClick}>
                                 {content}
                             </button>
                         ))}
                     </div>
                 </div>
                 <Icon
-                    className = { classes.closeIcon }
-                    color = { theme.palette.icon04 }
-                    id = 'close-notification'
-                    onClick = { onDismiss }
-                    size = { 20 }
-                    src = { IconCloseLarge }
-                    testId = { `${titleKey || descriptionKey}-dismiss` } />
+                    className={classes.closeIcon}
+                    color={theme.palette.icon04}
+                    id='close-notification'
+                    onClick={onDismiss}
+                    size={20}
+                    src={IconCloseLarge}
+                    testId={`${titleKey || descriptionKey}-dismiss`} />
             </div>
         </div>
     );

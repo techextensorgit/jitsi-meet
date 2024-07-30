@@ -3,7 +3,7 @@ import { AnyAction } from 'redux';
 import { IReduxState, IStore } from '../app/types';
 import { APP_WILL_MOUNT, APP_WILL_UNMOUNT } from '../base/app/actionTypes';
 import { CONFERENCE_JOINED, ENDPOINT_MESSAGE_RECEIVED } from '../base/conference/actionTypes';
-import { getCurrentConference } from '../base/conference/functions'; 
+import { getCurrentConference } from '../base/conference/functions';
 import { IJitsiConference } from '../base/conference/reducer';
 import { openDialog } from '../base/dialog/actions';
 import i18next from '../base/i18n/i18next';
@@ -65,140 +65,141 @@ MiddlewareRegistry.register(store => next => action => {
     let isOpen, unreadCount;
 
     switch (action.type) {
-    case ADD_MESSAGE:
-        unreadCount = getUnreadCount(getState());
-        if (action.isReaction) {
-            action.hasRead = false;
-        } else {
-            unreadCount = action.hasRead ? 0 : unreadCount + 1;
-        }
-        isOpen = getState()['features/chat'].isOpen;
-
-        if (typeof APP !== 'undefined') {
-            APP.API.notifyChatUpdated(unreadCount, isOpen);
-        }
-        break;
-
-    case APP_WILL_MOUNT:
-        dispatch(
-                registerSound(INCOMING_MSG_SOUND_ID, INCOMING_MSG_SOUND_FILE));
-        break;
-
-    case APP_WILL_UNMOUNT:
-        dispatch(unregisterSound(INCOMING_MSG_SOUND_ID));
-        break;
-
-    case CONFERENCE_JOINED:
-        _addChatMsgListener(action.conference, store);
-        break;
-
-    case CLOSE_CHAT: {
-        const isPollTabOpen = getState()['features/chat'].isPollsTabFocused;
-
-        unreadCount = 0;
-
-        if (typeof APP !== 'undefined') {
-            APP.API.notifyChatUpdated(unreadCount, false);
-        }
-
-        if (isPollTabOpen) {
-            dispatch(resetNbUnreadPollsMessages());
-        }
-        break;
-    }
-
-    case ENDPOINT_MESSAGE_RECEIVED: {
-        const state = store.getState();
-
-        if (!isReactionsEnabled(state)) {
-            return;
-        }
-
-        const { participant, data } = action;
-
-        if (data?.name === ENDPOINT_REACTION_NAME) {
-            store.dispatch(pushReactions(data.reactions));
-
-            _handleReceivedMessage(store, {
-                id: participant.getId(),
-                message: getReactionMessageFromBuffer(data.reactions),
-                privateMessage: false,
-                lobbyChat: false,
-                timestamp: data.timestamp
-            }, false, true);
-        }
-
-        break;
-    }
-
-    case OPEN_CHAT:
-        unreadCount = 0;
-
-        if (typeof APP !== 'undefined') {
-            APP.API.notifyChatUpdated(unreadCount, true);
-        }
-        break;
-
-    case SET_IS_POLL_TAB_FOCUSED: {
-        dispatch(resetNbUnreadPollsMessages());
-        break;
-    }
-
-    case SEND_MESSAGE: {
-        const state = store.getState();
-        const conference = getCurrentConference(state);
-
-        if (conference) {
-            // There may be cases when we intend to send a private message but we forget to set the
-            // recipient. This logic tries to mitigate this risk.
-            const shouldSendPrivateMessageTo = _shouldSendPrivateMessageTo(state, action);
-
-            const participantExists = shouldSendPrivateMessageTo
-                && getParticipantById(state, shouldSendPrivateMessageTo);
-
-            if (shouldSendPrivateMessageTo && participantExists) {
-                dispatch(openDialog(ChatPrivacyDialog, {
-                    message: action.message,
-                    participantID: shouldSendPrivateMessageTo
-                }));
+        case ADD_MESSAGE:
+            unreadCount = getUnreadCount(getState());
+            if (action.isReaction) {
+                action.hasRead = false;
             } else {
-                // Sending the message if privacy notice doesn't need to be shown.
+                unreadCount = action.hasRead ? 0 : unreadCount + 1;
+            }
+            isOpen = getState()['features/chat'].isOpen;
 
-                const { privateMessageRecipient, isLobbyChatActive, lobbyMessageRecipient }
-                    = state['features/chat'];
+            if (typeof APP !== 'undefined') {
+                APP.API.notifyChatUpdated(unreadCount, isOpen);
+            }
+            break;
 
-                if (typeof APP !== 'undefined') {
-                    APP.API.notifySendingChatMessage(action.message, Boolean(privateMessageRecipient));
-                }
+        case APP_WILL_MOUNT:
+            dispatch(
+                registerSound(INCOMING_MSG_SOUND_ID, INCOMING_MSG_SOUND_FILE));
+            break;
 
-                if (isLobbyChatActive && lobbyMessageRecipient) {
-                    conference.sendLobbyMessage({
-                        type: LOBBY_CHAT_MESSAGE,
-                        message: action.message
-                    }, lobbyMessageRecipient.id);
-                    _persistSentPrivateMessage(store, lobbyMessageRecipient.id, action.message, true);
-                } else if (privateMessageRecipient) {
-                    conference.sendPrivateTextMessage(privateMessageRecipient.id, action.message);
-                    _persistSentPrivateMessage(store, privateMessageRecipient.id, action.message);
+        case APP_WILL_UNMOUNT:
+            dispatch(unregisterSound(INCOMING_MSG_SOUND_ID));
+            break;
+
+        case CONFERENCE_JOINED:
+            _addChatMsgListener(action.conference, store);
+            break;
+
+        case CLOSE_CHAT: {
+            const isPollTabOpen = getState()['features/chat'].isPollsTabFocused;
+
+            unreadCount = 0;
+
+            if (typeof APP !== 'undefined') {
+                APP.API.notifyChatUpdated(unreadCount, false);
+            }
+
+            if (isPollTabOpen) {
+                dispatch(resetNbUnreadPollsMessages());
+            }
+            break;
+        }
+
+        case ENDPOINT_MESSAGE_RECEIVED: {
+            const state = store.getState();
+
+            if (!isReactionsEnabled(state)) {
+                return;
+            }
+
+            const { participant, data } = action;
+
+            if (data?.name === ENDPOINT_REACTION_NAME) {
+                store.dispatch(pushReactions(data.reactions));
+
+                _handleReceivedMessage(store, {
+                    id: participant.getId(),
+                    message: getReactionMessageFromBuffer(data.reactions),
+                    privateMessage: false,
+                    lobbyChat: false,
+                    timestamp: data.timestamp
+                }, false, true);
+            }
+
+            break;
+        }
+
+        case OPEN_CHAT:
+            unreadCount = 0;
+
+            if (typeof APP !== 'undefined') {
+                APP.API.notifyChatUpdated(unreadCount, true);
+            }
+            break;
+
+        case SET_IS_POLL_TAB_FOCUSED: {
+            dispatch(resetNbUnreadPollsMessages());
+            break;
+        }
+
+        case SEND_MESSAGE: {
+            const state = store.getState();
+            const conference = getCurrentConference(state);
+
+            if (conference) {
+                // There may be cases when we intend to send a private message but we forget to set the
+                // recipient. This logic tries to mitigate this risk.
+                const shouldSendPrivateMessageTo = _shouldSendPrivateMessageTo(state, action);
+
+                const participantExists = shouldSendPrivateMessageTo
+                    && getParticipantById(state, shouldSendPrivateMessageTo);
+
+                if (shouldSendPrivateMessageTo && participantExists) {
+                    dispatch(openDialog(ChatPrivacyDialog, {
+                        message: action.message,
+                        participantID: shouldSendPrivateMessageTo
+                    }));
                 } else {
-                    conference.sendTextMessage(action.message);
+                    // Sending the message if privacy notice doesn't need to be shown.
+
+                    const { privateMessageRecipient, isLobbyChatActive, lobbyMessageRecipient }
+                        = state['features/chat'];
+
+                    if (typeof APP !== 'undefined') {
+                        APP.API.notifySendingChatMessage(action.message, Boolean(privateMessageRecipient));
+                    }
+
+                    if (isLobbyChatActive && lobbyMessageRecipient) {
+                        conference.sendLobbyMessage({
+                            type: LOBBY_CHAT_MESSAGE,
+                            message: action.message
+                        }, lobbyMessageRecipient.id);
+                        _persistSentPrivateMessage(store, lobbyMessageRecipient.id, action.message, true);
+                    } else if (privateMessageRecipient) {
+                        conference.sendPrivateTextMessage(privateMessageRecipient.id, action.message);
+                        _persistSentPrivateMessage(store, privateMessageRecipient.id, action.message);
+                    } else {
+                        conference.sendTextMessage(action.message);
+                    }
                 }
+
+            }
+            break;
+        }
+
+        case ADD_REACTION_MESSAGE: {
+            if (localParticipant?.id) {
+                _handleReceivedMessage(store, {
+                    id: localParticipant.id,
+                    message: action.message,
+                    privateMessage: false,
+                    timestamp: Date.now(),
+                    lobbyChat: false
+                }, false, true);
             }
         }
-        break;
-    }
-
-    case ADD_REACTION_MESSAGE: {
-        if (localParticipant?.id) {
-            _handleReceivedMessage(store, {
-                id: localParticipant.id,
-                message: action.message,
-                privateMessage: false,
-                timestamp: Date.now(),
-                lobbyChat: false
-            }, false, true);
-        }
-    }
     }
 
     return next(action);
@@ -260,7 +261,8 @@ function _addChatMsgListener(conference: IJitsiConference, store: IStore) {
                 timestamp,
                 displayName,
                 isGuest,
-                privateMessage: false });
+                privateMessage: false
+            });
         }
     );
 
@@ -291,7 +293,8 @@ function _addChatMsgListener(conference: IJitsiConference, store: IStore) {
  */
 function _onConferenceMessageReceived(store: IStore, { displayName, id, isGuest, message, timestamp, privateMessage }: {
     displayName?: string; id: string; isGuest?: boolean;
-    message: string; privateMessage: boolean; timestamp: number; }) {
+    message: string; privateMessage: boolean; timestamp: number;
+}) {
     const isGif = isGifMessage(message);
 
     if (isGif) {
@@ -309,6 +312,7 @@ function _onConferenceMessageReceived(store: IStore, { displayName, id, isGuest,
         lobbyChat: false,
         timestamp
     }, true, isGif);
+
 }
 
 /**
@@ -351,12 +355,16 @@ function _handleChatError({ dispatch }: IStore, error: Error) {
  */
 export function handleLobbyMessageReceived(message: string, participantId: string) {
     return async (dispatch: IStore['dispatch'], getState: IStore['getState']) => {
-        _handleReceivedMessage({ dispatch,
-            getState }, { id: participantId,
+        _handleReceivedMessage({
+            dispatch,
+            getState
+        }, {
+            id: participantId,
             message,
             privateMessage: false,
             lobbyChat: true,
-            timestamp: Date.now() });
+            timestamp: Date.now()
+        });
     };
 }
 
@@ -395,11 +403,12 @@ function getLobbyChatDisplayName(state: IReduxState, id: string) {
  * @returns {void}
  */
 function _handleReceivedMessage({ dispatch, getState }: IStore,
-        { displayName, id, isGuest, message, privateMessage, timestamp, lobbyChat }: {
+    { displayName, id, isGuest, message, privateMessage, timestamp, lobbyChat }: {
         displayName?: string; id: string; isGuest?: boolean; lobbyChat: boolean;
-        message: string; privateMessage: boolean; timestamp: number; },
-        shouldPlaySound = true,
-        isReaction = false
+        message: string; privateMessage: boolean; timestamp: number;
+    },
+    shouldPlaySound = true,
+    isReaction = false
 ) {
     // Logic for all platforms:
     const state = getState();
@@ -421,6 +430,19 @@ function _handleReceivedMessage({ dispatch, getState }: IStore,
     const hasRead = participant.local || isChatOpen;
     const timestampToDate = timestamp ? new Date(timestamp) : new Date();
     const millisecondsTimestamp = timestampToDate.getTime();
+    console.log("_onConferenceMessageReceived", displayNameToShow, message)
+    try {
+        window.top?.postMessage({
+            type: "chatMessage", value: {
+                "from": displayNameToShow,
+                "type": "groupchat",
+                "message": message,
+                "time": new Date()
+            }
+        }, '*');
+    } catch (e) {
+        console.error(e)
+    }
 
     // skip message notifications on join (the messages having timestamp - coming from the history)
     const shouldShowNotification = userSelectedNotifications?.['notify.chatMessages']
@@ -477,7 +499,7 @@ function _handleReceivedMessage({ dispatch, getState }: IStore,
  * @returns {void}
  */
 function _persistSentPrivateMessage({ dispatch, getState }: IStore, recipientID: string,
-        message: string, isLobbyPrivateMessage = false) {
+    message: string, isLobbyPrivateMessage = false) {
     const state = getState();
     const localParticipant = getLocalParticipant(state);
 
