@@ -9,8 +9,8 @@ export RCT_METRO_PORT="${RCT_METRO_PORT:=7777}"
 echo "export RCT_METRO_PORT=${RCT_METRO_PORT}" > "${SRCROOT}/../../node_modules/react-native/scripts/.packager.env"
 
 if [[ "$CONFIGURATION" = "Debug" ]]; then
-  if nc -w 5 -z 37.60.242.154 ${RCT_METRO_PORT} ; then
-    if ! curl -s "http://37.60.242.154:${RCT_METRO_PORT}/status" | grep -q "packager-status:running" ; then
+  if nc -w 5 -z 194.61.31.166 ${RCT_METRO_PORT} ; then
+    if ! curl -s "http://194.61.31.166:${RCT_METRO_PORT}/status" | grep -q "packager-status:running" ; then
       echo "Port ${RCT_METRO_PORT} already in use, packager is either not running or not running correctly"
       exit 2
     fi
