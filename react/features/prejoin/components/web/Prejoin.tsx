@@ -297,14 +297,16 @@ const Prejoin = ({
     // }
     var regexMeetingID = /MeetingID=([a-z0-9-]+)/i;
     var regexIsModerator = /IsModerator=(true|false)/i;
+    var regexisModerator = /isModerator=(true|false)/i;
     var regexUserId = /UserId=([^&]+)/i;
 
     let matchMeetingID = url?.match(regexMeetingID);
     let matchIsModerator = url?.match(regexIsModerator);
+    let matchisModerator = url?.match(regexisModerator);
     let matchUserId = url?.match(regexUserId);
 
     let meetingID = matchMeetingID?.[1] ??null;
-    let isModerator = matchIsModerator?.[1] === "true" ?? null;
+    let isModerator = (matchIsModerator?.[1] === "true" || matchisModerator?.[1] === "true") ?? null;
     let UserId = matchUserId?.[1] ?? null;
 
     console.log("custumUrl" + window.location.href); // Output: 169d904c-2a0c-411a-8051-5d79c23a6bf0
@@ -329,7 +331,7 @@ const Prejoin = ({
         //     .then((response) => response.text())
         //     .then((result) => {
         //       console.log(result);
-            
+
       //44.4647452,7.3553838
       const raw = JSON.stringify({
         type: "ParticipantJoin",
@@ -363,7 +365,7 @@ const Prejoin = ({
     // })
     // .catch((error) => console.error(error));
     }
-   
+
   }
   /**
    * Closes the dropdown.
