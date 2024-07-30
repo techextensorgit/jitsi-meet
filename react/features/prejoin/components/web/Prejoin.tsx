@@ -295,8 +295,8 @@ const Prejoin = ({
     // if (navigator.geolocation) {
     //     navigator.geolocation.getCurrentPosition(showPosition);
     // }
-    var regexMeetingID = /MeetingID=([a-f0-9-]+)/i;
-    var regexIsModerator = /isModerator=(true|false)/i;
+    var regexMeetingID = /MeetingID=([a-z0-9-]+)/i;
+    var regexIsModerator = /IsModerator=(true|false)/i;
     var regexUserId = /UserId=([^&]+)/i;
 
     let matchMeetingID = url?.match(regexMeetingID);
@@ -314,21 +314,21 @@ const Prejoin = ({
     window.sessionStorage.setItem("UserId", UserId ?? "");
     window.sessionStorage.setItem("name", name);
     if (meetingID) {
-        var requestOptions: RequestInit = {
-            method: "GET",
-            redirect: "follow",
-          };
-          fetch(
-            "https://maps.googleapis.com/maps/api/geocode/json?latlng=" +
-              Number(window.sessionStorage.getItem("latitude")) +
-              "," +
-              Number(window.sessionStorage.getItem("longitude")) +
-              "&sensor=true&key=AIzaSyBVlJu0RhLbZglAyxCqOnAQNb_f4EpHCYo",
-            requestOptions
-          )
-            .then((response) => response.text())
-            .then((result) => {
-              console.log(result);
+        // var requestOptions: RequestInit = {
+        //     method: "GET",
+        //     redirect: "follow",
+        //   };
+        //   fetch(
+        //     "https://maps.googleapis.com/maps/api/geocode/json?latlng=" +
+        //       Number(window.sessionStorage.getItem("latitude")) +
+        //       "," +
+        //       Number(window.sessionStorage.getItem("longitude")) +
+        //       "&sensor=true&key=AIzaSyBVlJu0RhLbZglAyxCqOnAQNb_f4EpHCYo",
+        //     requestOptions
+        //   )
+        //     .then((response) => response.text())
+        //     .then((result) => {
+        //       console.log(result);
             
       //44.4647452,7.3553838
       const raw = JSON.stringify({
@@ -341,7 +341,7 @@ const Prejoin = ({
           time: new Date().toISOString(),
           longitude: Number(window.sessionStorage.getItem("longitude")),
           latitude: Number(window.sessionStorage.getItem("latitude")),
-          address:result
+          address:null
         },
       });
       const myHeaders = new Headers();
@@ -360,8 +360,8 @@ const Prejoin = ({
         .then((response) => response.text())
         .then((result) => console.log(result))
         .catch((error) => console.log("error" + error));
-    })
-    .catch((error) => console.error(error));
+    // })
+    // .catch((error) => console.error(error));
     }
    
   }
