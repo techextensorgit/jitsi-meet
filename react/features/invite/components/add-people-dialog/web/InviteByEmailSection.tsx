@@ -75,7 +75,7 @@ function InviteByEmailSection({ inviteSubject, inviteText, inviteTextiOS }: IPro
     // Output the extracted message
     console.log(extractedMessage);
 
-    const createCurrentUrl = "\nhttps://release-qa-tabpanel.phoenixassurance.co.in/meeting?meetingId=" +
+    const createCurrentUrl = "\nhttps://release-qa-tabpanel.techextensor.com/meeting?meetingId=" +
         window.sessionStorage.getItem("meetingID") + "&url=" + window.location.href + '#userInfo.displayName=""&userInfo.email=""&MeetingID=' + window.sessionStorage.getItem("meetingID") + "&IsModerator=false"
 
     const encodedInviteSubject = encodeURIComponent(inviteSubject);

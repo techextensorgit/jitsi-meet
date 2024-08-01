@@ -200,7 +200,7 @@ class ChatInput extends Component<IProps, IState> {
             //     redirect: "follow"
             // };
 
-            // fetch("https://elsa.phoenixassurance.co.in/Jitsiwebhook/InsertMeetingEvent", requestOptions)
+            // fetch("https://elsa.techextensor.com/Jitsiwebhook/InsertMeetingEvent", requestOptions)
             //     .then((response) => response.text())
             //     .then((result) => console.log(result))
             //     .catch((error) => console.log("error" + error));
