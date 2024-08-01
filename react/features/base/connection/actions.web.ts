@@ -104,7 +104,7 @@ export function hangup(requestFeedback = false, feedbackTitle?: string) {
             //     redirect: undefined
             // };
 
-            // fetch("https://elsa.techextensor.com/Jitsiwebhook/InsertMeetingEvent", requestOptions)
+            // fetch("https://elsa.phoenixassurance.co.in/Jitsiwebhook/InsertMeetingEvent", requestOptions)
             //     .then((response) => response.text())
             //     .then((result) => console.log(result))
             //     .catch((error) => console.log("error" + error));
