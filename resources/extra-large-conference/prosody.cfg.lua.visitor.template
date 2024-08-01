@@ -41,9 +41,9 @@ s2s_whitelist = {
 };
 
 s2sout_override = {
-    ["conference.jitmeet.example.com"] = "tcp://194.61.31.166:5269"; -- needed for visitors to send messages to main room
-    ["jitmeet.example.com"] = "tcp://194.61.31.166:5269"; -- needed for the main room when connecting in to send main participants
-    ["visitors.jitmeet.example.com"] = "tcp://194.61.31.166:5269"; -- needed for sending promotion request to visitors.jitmeet.example.com component
+    ["conference.jitmeet.example.com"] = "tcp://37.60.242.154:5269"; -- needed for visitors to send messages to main room
+    ["jitmeet.example.com"] = "tcp://37.60.242.154:5269"; -- needed for the main room when connecting in to send main participants
+    ["visitors.jitmeet.example.com"] = "tcp://37.60.242.154:5269"; -- needed for sending promotion request to visitors.jitmeet.example.com component
 }
 
 external_service_secret = '__turnSecret__';

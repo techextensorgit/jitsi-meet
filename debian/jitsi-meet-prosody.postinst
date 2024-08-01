@@ -31,7 +31,7 @@ case "$1" in
         db_get jitsi-videobridge/jvb-hostname
         if [ -z "$RET" ] ; then
             # server hostname
-            db_set jitsi-videobridge/jvb-hostname "194.61.31.166"
+            db_set jitsi-videobridge/jvb-hostname "37.60.242.154"
             db_input critical jitsi-videobridge/jvb-hostname || true
             db_go
         fi
