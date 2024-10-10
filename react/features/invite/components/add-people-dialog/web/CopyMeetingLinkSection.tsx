@@ -35,7 +35,7 @@ function CopyMeetingLinkSection({ url }: IProps) {
     // jitsi.phoenixassurance.co.in/checkmeetingjoinandleavr_Claim6352_1714388214869#
     // userInfo.displayName="Claim%20Manager%20%20Nishi%20Passwala"&userInfo.email="nishi%40yopmail.com"&
     // MeetingID=cc9395d4-3dae-4205-8b0a-8150a0656a61&IsModerator=false&UserId=0881f89c-2f3b-4638-af68-4982adc1ef52
-    const createCurrentUrl = "https://release-qa-tabpanel.phoenixassurance.co.in/meeting?meetingId=" +
+    const createCurrentUrl = "https://claims.phoenixassurance.co.in/meeting?meetingId=" +
         window.sessionStorage.getItem("meetingID") + "&url=" + url + '#userInfo.displayName=""&userInfo.email=""&MeetingID=' + window.sessionStorage.getItem("meetingID") + "&IsModerator=false"
     return (
         <>

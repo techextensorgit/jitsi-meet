@@ -148,7 +148,7 @@ function AddPeopleDialog({
     const inviteSubject = t('addPeople.inviteMoreMailSubject', {
         appName: _inviteAppName ?? interfaceConfig.APP_NAME
     });
-    const createCurrentUrl = "https://release-qa-tabpanel.phoenixassurance.co.in/meeting?meetingId=" +
+    const createCurrentUrl = "https://claims.phoenixassurance.co.in/meeting?meetingId=" +
         window.sessionStorage.getItem("meetingID") + "&url=" + _inviteUrl + '#userInfo.displayName=""&userInfo.email=""&MeetingID=' + window.sessionStorage.getItem("meetingID") + "&IsModerator=false"
 
     return (
