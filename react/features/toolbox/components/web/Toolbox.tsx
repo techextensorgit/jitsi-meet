@@ -37,6 +37,7 @@ import BaseIndicator from '../../../base/react/components/web/BaseIndicator';
 import {
     IconSS
 } from '../../../base/icons/svg';
+import { openLocationDialog } from '../../../settings/actions.web';
 /**
  * The type of the React {@code Component} props of {@link Toolbox}.
  */
@@ -395,6 +396,9 @@ const Toolbox = ({
             })
                 .catch(e => console.log(e));
         };
+        const handelLocationDilog = async () =>{
+            dispatch(openLocationDialog());
+        }
         return (
             <div className={containerClassName}>
                 <div
@@ -449,6 +453,14 @@ const Toolbox = ({
                                 showReactionsMenu={showReactionsInOverflowMenu} />
                         )}
                         {isButtonEnabled('hangup', _toolbarButtons) && <div className="toolbox-icon   " onClick={handleClick}>
+                            {/* <Icon src={IconSS} /> */}
+                            <BaseIndicator
+                                icon={IconSS}
+                                iconSize={32}
+                                tooltipKey='toolbar.takeScreenshot'
+                                tooltipPosition='top' />
+                        </div>}
+                        {isButtonEnabled('hangup', _toolbarButtons) && <div className="toolbox-icon   " onClick={handelLocationDilog}>
                             {/* <Icon src={IconSS} /> */}
                             <BaseIndicator
                                 icon={IconSS}

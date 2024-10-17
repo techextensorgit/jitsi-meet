@@ -39,12 +39,12 @@
     </Location>
 
     ProxyPreserveHost on
-    ProxyPass /http-bind http://194.61.31.166:5280/http-bind
-    ProxyPassReverse /http-bind http://194.61.31.166:5280/http-bind
-    ProxyPass /xmpp-websocket ws://194.61.31.166:5280/xmpp-websocket
-    ProxyPassReverse /xmpp-websocket ws://194.61.31.166:5280/xmpp-websocket
-    ProxyPass /colibri-ws/default-id ws://194.61.31.166:9090/colibri-ws/default-id
-    ProxyPassReverse /colibri-ws/default-id ws://194.61.31.166:9090/colibri-ws/default-id
+    ProxyPass /http-bind http://192.168.10.100:5280/http-bind
+    ProxyPassReverse /http-bind http://192.168.10.100:5280/http-bind
+    ProxyPass /xmpp-websocket ws://192.168.10.100:5280/xmpp-websocket
+    ProxyPassReverse /xmpp-websocket ws://192.168.10.100:5280/xmpp-websocket
+    ProxyPass /colibri-ws/default-id ws://192.168.10.100:9090/colibri-ws/default-id
+    ProxyPassReverse /colibri-ws/default-id ws://192.168.10.100:9090/colibri-ws/default-id
 
     RewriteEngine on
     RewriteRule ^/([a-zA-Z0-9]+)$ /index.html
