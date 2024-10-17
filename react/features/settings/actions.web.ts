@@ -32,6 +32,7 @@ import {
     getProfileTabProps,
     getShortcutsTabProps
 } from './functions.web';
+import LocationDialog from './components/web/LocationDialog';
 
 
 /**
@@ -86,10 +87,25 @@ export function openLogoutDialog() {
  * @returns {Function}
  */
 export function openSettingsDialog(defaultTab?: string, isDisplayedOnWelcomePage?: boolean) {
+    console.log("openSettingsDialog")
     return openDialog(SettingsDialog, {
         defaultTab,
         isDisplayedOnWelcomePage
     });
+}
+
+/**
+ * Opens {@code SettingsDialog}.
+ *
+ * @param {string} defaultTab - The tab in {@code SettingsDialog} that should be
+ * displayed initially.
+ * @param {boolean} isDisplayedOnWelcomePage - Indicates whether the device selection dialog is displayed on the
+ * welcome page or not.
+ * @returns {Function}
+ */
+export function openLocationDialog() {
+    console.log("openLocationDialog")
+    return openDialog(LocationDialog);
 }
 
 /**

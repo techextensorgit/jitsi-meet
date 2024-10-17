@@ -238,7 +238,7 @@ function getDevServerConfig() {
                 warnings: false
             }
         },
-        host: '194.61.31.166',
+        host: '192.168.10.100',
         hot: true,
         proxy: {
             '/': {
@@ -259,7 +259,7 @@ function getDevServerConfig() {
 
 function getProdServerConfig() {
     return {
-        host: '194.61.31.166',
+        host: '192.168.10.100',
         port:8882,
         server: 'https'
     };

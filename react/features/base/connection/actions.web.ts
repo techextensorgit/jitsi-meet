@@ -78,6 +78,7 @@ export function hangup(requestFeedback = false, feedbackTitle?: string) {
         }
         // alert(feedbackTitle || "sorry")
         // window.top.postMessage('endMeeting', '*')
+        console.log("endMeeting",{ type: "endMeeting", value: true })
         if (feedbackTitle) {
             if (feedbackTitle == "The meeting has been terminated")
                 window.top?.postMessage({ type: "endMeeting", value: true }, '*');

@@ -25,6 +25,7 @@ class SettingsButton extends AbstractButton<AbstractButtonProps> {
      * @returns {void}
      */
     _handleClick() {
+        console.log("screen.settings.main",screen.settings.main)
         return navigate(screen.settings.main);
     }
 }

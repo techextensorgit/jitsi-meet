@@ -1,5 +1,5 @@
 -- Using version https://hg.prosody.im/prosody-modules/file/6c806a99f802/mod_secure_interfaces/mod_secure_interfaces.lua
-local secure_interfaces = module:get_option_set("secure_interfaces", { "194.61.31.166", "::1" });
+local secure_interfaces = module:get_option_set("secure_interfaces", { "192.168.10.100", "::1" });
 
 module:hook("stream-features", function (event)
 	local session = event.origin;

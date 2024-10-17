@@ -27,7 +27,8 @@ function LogoutDialog({ onLogout, t }: IProps) {
         <Dialog
             ok = {{ translationKey: 'dialog.Yes' }}
             onSubmit = { onLogout }
-            titleKey = { t('dialog.logoutTitle') }>
+            titleKey = { t('dialog.logoutTitle') }
+            size= {'large'}>
             <div>
                 { t('dialog.logoutQuestion') }
             </div>

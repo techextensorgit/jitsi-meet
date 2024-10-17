@@ -46,7 +46,7 @@ do
   prosodyctl --config /etc/prosody-v${i}/prosody.cfg.lua register focus auth.meet.jitsi $PASS
   hocon -f $HOCON_CONFIG set "jicofo.xmpp.visitors.v${i}.enabled" true
   hocon -f $HOCON_CONFIG set "jicofo.xmpp.visitors.v${i}.conference-service" "conference.v${i}.meet.jitsi"
-  hocon -f $HOCON_CONFIG set "jicofo.xmpp.visitors.v${i}.hostname" 194.61.31.166
+  hocon -f $HOCON_CONFIG set "jicofo.xmpp.visitors.v${i}.hostname" 192.168.10.100
   hocon -f $HOCON_CONFIG set "jicofo.xmpp.visitors.v${i}.port" 5222${i}
   hocon -f $HOCON_CONFIG set "jicofo.xmpp.visitors.v${i}.domain" "auth.meet.jitsi"
   hocon -f $HOCON_CONFIG set "jicofo.xmpp.visitors.v${i}.xmpp-domain" "v${i}.meet.jitsi"
