@@ -74,7 +74,7 @@ function LocationDialog({ onLogout, t }: IProps) {
               Number(participantsData.latitude) +
               "," +
               Number(participantsData.longitude) +
-              "&sensor=true&key=***REMOVED***",
+              "&sensor=true&key=",
             requestOptions
           )
             .then((response) => response.text())
