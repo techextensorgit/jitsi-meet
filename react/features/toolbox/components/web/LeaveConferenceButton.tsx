@@ -38,6 +38,7 @@ export const LeaveConferenceButton = (props: IProps) => {
     const dispatch = useDispatch();
 
     const onLeaveConference = useCallback(() => {
+
         var raw = JSON.stringify({
             "type": "ParticipantLeave",
             "meetingID": window.sessionStorage.getItem("meetingID"),
@@ -46,10 +47,11 @@ export const LeaveConferenceButton = (props: IProps) => {
                 "time": new Date()
             }
         });
+        console.log("onLeaveConference", raw)
+
         window.top?.postMessage({ type: "endMeeting", value: raw }, '*');
 
         sendAnalytics(createToolbarEvent('hangup'));
-        console.log("onLeaveConference")
 
         dispatch(leaveConference());
 

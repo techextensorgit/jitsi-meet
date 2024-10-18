@@ -45,6 +45,8 @@ function HangupMenu() {
                 "time": new Date()
             }
         });
+        console.log("onLeaveConference", raw)
+
         window.top?.postMessage({ type: "endMeeting", value: raw }, '*');
 
         dispatch(hideSheet());

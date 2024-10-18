@@ -19,6 +19,18 @@ const EndMeetingButton = (): JSX.Element => {
     const dispatch = useDispatch();
 
     const onSelect = useCallback(() => {
+        var raw = JSON.stringify({
+            "type": "ParticipantLeave",
+            "meetingID": window.sessionStorage.getItem("meetingID"),
+            "data": {
+                "from": window.sessionStorage.getItem("name"),
+                "time": new Date()
+            }
+        });
+        console.log("onLeaveConference", raw)
+
+        window.top?.postMessage({ type: "endMeeting", value: raw }, '*');
+
         sendAnalytics(createToolbarEvent('hangup'));
 
         dispatch(appNavigate(undefined));
