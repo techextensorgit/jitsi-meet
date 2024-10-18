@@ -52,7 +52,7 @@ export const HangupContextMenuItem = (props: IProps) => {
     const shouldPreventExecution = props.notifyMode === NOTIFY_CLICK_MODE.PREVENT_AND_NOTIFY;
 
     const _onClick = useCallback(() => {
-        const raw = JSON.stringify({
+        var raw = JSON.stringify({
             "type": "ParticipantLeave",
             "meetingID": window.sessionStorage.getItem("meetingID"),
             "data": {

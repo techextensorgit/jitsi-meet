@@ -80,7 +80,7 @@ export function hangup(requestFeedback = false, feedbackTitle?: string) {
         // // window.top.postMessage('endMeeting', '*')
         // if (feedbackTitle) {
         //     if (feedbackTitle == "The meeting has been terminated")
-        const raw = JSON.stringify({
+        var raw = JSON.stringify({
             "type": "ParticipantLeave",
             "meetingID": window.sessionStorage.getItem("meetingID"),
             "data": {

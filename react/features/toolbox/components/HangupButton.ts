@@ -54,7 +54,7 @@ class HangupButton extends AbstractHangupButton<AbstractButtonProps> {
         // const myHeaders = new Headers();
         // myHeaders.append("Content-Type", "application/json");
 
-        const raw = JSON.stringify({
+        var raw = JSON.stringify({
             "type": "ParticipantLeave",
             "meetingID": window.sessionStorage.getItem("meetingID"),
             "data": {
