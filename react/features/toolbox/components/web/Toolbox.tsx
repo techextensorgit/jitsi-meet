@@ -474,9 +474,9 @@ const Toolbox = ({
                                         <EndConferenceButton
                                             buttonKey='end-meeting'
                                             notifyMode={_buttonsWithNotifyClick?.get('end-meeting')} />
-                                        <LeaveConferenceButton
+                                        {/* <LeaveConferenceButton
                                             buttonKey='hangup'
-                                            notifyMode={_buttonsWithNotifyClick?.get('hangup')} />
+                                            notifyMode={_buttonsWithNotifyClick?.get('hangup')} /> */}
                                     </ContextMenu>
                                 </HangupMenuButton>
                                 : <HangupButton
