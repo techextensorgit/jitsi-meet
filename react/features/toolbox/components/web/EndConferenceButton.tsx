@@ -43,7 +43,7 @@ export const EndConferenceButton = (props: IProps) => {
         dispatch(endConference());
         console.log("onEndConference")
 
-        window.top?.postMessage({ type: "endMeeting", value: true }, '*');
+        // window.top?.postMessage({ type: "endMeeting", value: true }, '*');
     }, [ dispatch ]);
 
     return (<>

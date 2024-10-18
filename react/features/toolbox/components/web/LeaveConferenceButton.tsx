@@ -42,7 +42,7 @@ export const LeaveConferenceButton = (props: IProps) => {
         dispatch(leaveConference());
         console.log("onLeaveConference")
 
-        window.top?.postMessage({ type: "endMeeting", value: true }, '*');
+        // window.top?.postMessage({ type: "endMeeting", value: true }, '*');
     }, [ dispatch ]);
 
     return (
