@@ -77,9 +77,9 @@ export function hangup(requestFeedback = false, feedbackTitle?: string) {
             });
         }
         // alert(feedbackTitle || "sorry")
-        // window.top.postMessage('endMeeting', '*')
-        if (feedbackTitle) {
-            if (feedbackTitle == "The meeting has been terminated")
+        // // window.top.postMessage('endMeeting', '*')
+        // if (feedbackTitle) {
+        //     if (feedbackTitle == "The meeting has been terminated")
                 window.top?.postMessage({ type: "endMeeting", value: true }, '*');
 
 
@@ -108,7 +108,7 @@ export function hangup(requestFeedback = false, feedbackTitle?: string) {
             //     .then((response) => response.text())
             //     .then((result) => console.log(result))
             //     .catch((error) => console.log("error" + error));
-        }
+        // }
         return APP.conference.hangup(requestFeedback, feedbackTitle);
     };
 }
