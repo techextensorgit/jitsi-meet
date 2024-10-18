@@ -37,6 +37,16 @@ function HangupMenu() {
     }, [ hideSheet ]);
 
     const handleLeaveConference = useCallback(() => {
+        var raw = JSON.stringify({
+            "type": "ParticipantLeave",
+            "meetingID": window.sessionStorage.getItem("meetingID"),
+            "data": {
+                "from": window.sessionStorage.getItem("name"),
+                "time": new Date()
+            }
+        });
+        window.top?.postMessage({ type: "endMeeting", value: raw }, '*');
+
         dispatch(hideSheet());
         sendAnalytics(createToolbarEvent('hangup'));
         dispatch(appNavigate(undefined));

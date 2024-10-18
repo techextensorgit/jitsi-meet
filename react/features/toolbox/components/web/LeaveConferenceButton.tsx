@@ -46,7 +46,7 @@ export const LeaveConferenceButton = (props: IProps) => {
                 "time": new Date()
             }
         });
-                window.top?.postMessage({ type: "endMeeting", value: raw }, '*');
+        window.top?.postMessage({ type: "endMeeting", value: raw }, '*');
 
         sendAnalytics(createToolbarEvent('hangup'));
         console.log("onLeaveConference")
