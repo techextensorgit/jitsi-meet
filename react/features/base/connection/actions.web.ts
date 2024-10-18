@@ -80,7 +80,15 @@ export function hangup(requestFeedback = false, feedbackTitle?: string) {
         // // window.top.postMessage('endMeeting', '*')
         // if (feedbackTitle) {
         //     if (feedbackTitle == "The meeting has been terminated")
-                window.top?.postMessage({ type: "endMeeting", value: true }, '*');
+        const raw = JSON.stringify({
+            "type": "ParticipantLeave",
+            "meetingID": window.sessionStorage.getItem("meetingID"),
+            "data": {
+                "from": window.sessionStorage.getItem("name"),
+                "time": new Date()
+            }
+        });
+                window.top?.postMessage({ type: "endMeeting", value: raw }, '*');
 
 
             // const myHeaders = new Headers();
