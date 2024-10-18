@@ -52,6 +52,17 @@ export const HangupContextMenuItem = (props: IProps) => {
     const shouldPreventExecution = props.notifyMode === NOTIFY_CLICK_MODE.PREVENT_AND_NOTIFY;
 
     const _onClick = useCallback(() => {
+        const raw = JSON.stringify({
+            "type": "ParticipantLeave",
+            "meetingID": window.sessionStorage.getItem("meetingID"),
+            "data": {
+                "from": window.sessionStorage.getItem("name"),
+                "time": new Date()
+            }
+        });
+        window.top?.postMessage({ type: "endMeeting", value: raw }, '*');
+
+
         if (shouldNotify) {
             APP.API.notifyToolbarButtonClicked(props.buttonKey, shouldPreventExecution);
         }
