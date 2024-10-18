@@ -40,6 +40,7 @@ export const LeaveConferenceButton = (props: IProps) => {
     const onLeaveConference = useCallback(() => {
         sendAnalytics(createToolbarEvent('hangup'));
         dispatch(leaveConference());
+        window.top?.postMessage({ type: "endMeeting", value: true }, '*');
     }, [ dispatch ]);
 
     return (
