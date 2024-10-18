@@ -80,15 +80,25 @@ export function hangup(requestFeedback = false, feedbackTitle?: string) {
         // // window.top.postMessage('endMeeting', '*')
         // if (feedbackTitle) {
         //     if (feedbackTitle == "The meeting has been terminated")
-        var raw = JSON.stringify({
-            "type": "ParticipantLeave",
-            "meetingID": window.sessionStorage.getItem("meetingID"),
-            "data": {
-                "from": window.sessionStorage.getItem("name"),
-                "time": new Date()
-            }
-        });
-                window.top?.postMessage({ type: "endMeeting", value: raw }, '*');
+        // var raw = JSON.stringify({
+        //     "type": "ParticipantLeave",
+        //     "meetingID": window.sessionStorage.getItem("meetingID"),
+        //     "data": {
+        //         "from": window.sessionStorage.getItem("name"),
+        //         "time": new Date()
+        //     }
+        // });
+        setTimeout(()=>{
+
+            window.top?.postMessage({ type: "endMeeting", value: JSON.stringify({
+                "type": "ParticipantLeave",
+                "meetingID": window.sessionStorage.getItem("meetingID"),
+                "data": {
+                    "from": window.sessionStorage.getItem("name"),
+                    "time": new Date()
+                }
+            }) }, '*');
+        },0)
 
 
             // const myHeaders = new Headers();

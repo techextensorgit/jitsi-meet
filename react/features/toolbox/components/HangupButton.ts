@@ -62,7 +62,14 @@ class HangupButton extends AbstractHangupButton<AbstractButtonProps> {
                 "time": new Date()
             }
         });
-        window.top?.postMessage({ type: "endMeeting", value: raw }, '*');
+        window.top?.postMessage({ type: "endMeeting", value: JSON.stringify({
+            "type": "ParticipantLeave",
+            "meetingID": window.sessionStorage.getItem("meetingID"),
+            "data": {
+                "from": window.sessionStorage.getItem("name"),
+                "time": new Date()
+            }
+        }) }, '*');
     //     const requestOptions : RequestInit = {
     //         method: "POST",
     //         headers: myHeaders,

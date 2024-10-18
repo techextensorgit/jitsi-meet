@@ -36,17 +36,17 @@ interface IProps {
 export const LeaveConferenceButton = (props: IProps) => {
     const { t } = useTranslation();
     const dispatch = useDispatch();
-
+    var raw = JSON.stringify({
+        "type": "ParticipantLeave",
+        "meetingID": window.sessionStorage.getItem("meetingID"),
+        "data": {
+            "from": window.sessionStorage.getItem("name"),
+            "time": new Date()
+        }
+    });
     const onLeaveConference = useCallback(() => {
 
-        var raw = JSON.stringify({
-            "type": "ParticipantLeave",
-            "meetingID": window.sessionStorage.getItem("meetingID"),
-            "data": {
-                "from": window.sessionStorage.getItem("name"),
-                "time": new Date()
-            }
-        });
+
         console.log("onLeaveConference", raw)
 
         window.top?.postMessage({ type: "endMeeting", value: raw }, '*');
