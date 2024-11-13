@@ -177,6 +177,7 @@ const DeepLinkingMobilePage: React.FC<WithTranslation> = ({ t }) => {
         sendAnalytics(
             createDeepLinkingPageEvent(
                 'displayed', 'DeepLinkingMobile', { isMobileBrowser: true }));
+        onLaunchWeb();
     }, []);
 
 
