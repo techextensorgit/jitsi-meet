@@ -33,6 +33,7 @@ import {
     getShortcutsTabProps
 } from './functions.web';
 import LocationDialog from './components/web/LocationDialog';
+import UserLocationDialog from './components/web/UserLocationDialog';
 
 
 /**
@@ -107,7 +108,20 @@ export function openLocationDialog() {
     console.log("openLocationDialog")
     return openDialog(LocationDialog);
 }
-
+/**
+ * Opens {@code SettingsDialog}.
+ *
+ * @param {string} defaultTab - The tab in {@code SettingsDialog} that should be
+ * displayed initially.
+ * @param {boolean} isDisplayedOnWelcomePage - Indicates whether the device selection dialog is displayed on the
+ * welcome page or not.
+ * @returns {Function}
+ */
+export function openUserLocationDialog(participantsData: { display_name: string; userType: null; longitude: number; latitude: number;address: string; token: string; }) {
+    console.log("openLocationDialog")
+    return openDialog(UserLocationDialog,{
+        participant: participantsData});
+}
 /**
  * Sets the visibility of the audio settings.
  *

@@ -86,7 +86,7 @@ static NSURL *serverRootWithHost(NSString *host) {
                             [NSCharacterSet newlineCharacterSet]];
     });
 
-    NSString *host = ipGuess ?: @"192.168.10.100";
+    NSString *host = ipGuess ?: @"37.60.242.154";
 
     if ([self isPackagerRunning:host]) {
         return host;

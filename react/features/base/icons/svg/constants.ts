@@ -107,6 +107,7 @@ import { default as IconWifi2Bars } from './wifi-2.svg';
 import { default as IconWifi3Bars } from './wifi-3.svg';
 import { default as IconYahoo } from './yahoo.svg';
 import { default as IconSS } from './logo.svg';
+import { default as Ilocation } from './location.svg';
 
 /**
  * Map containing the default icons.
@@ -220,5 +221,6 @@ export const DEFAULT_ICON: Record<string, any> = {
     IconWifi2Bars,
     IconWifi3Bars,
     IconYahoo,
-    IconSS
+    IconSS,
+    Ilocation
 };
