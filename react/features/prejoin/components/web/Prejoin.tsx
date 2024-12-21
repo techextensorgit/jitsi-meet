@@ -356,7 +356,7 @@ const Prejoin = ({
 
       // }
       fetch(
-        "https://elsa.techextensor.com/Jitsiwebhook/InsertMeetingEvent",
+        "https://elsa.phoenixassurance.co.in/Jitsiwebhook/InsertMeetingEvent",
         requestOptions
       )
         .then((response) => response.text())

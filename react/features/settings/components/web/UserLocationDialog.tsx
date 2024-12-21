@@ -126,8 +126,7 @@ function UserLocationDialog({ participant }: IProps) {
                   body: JSON.stringify(raw),
                   redirect: "follow",
                 };
-                
-                fetch("https://tab-qa.techextensor.com/api/v1/CRUD/Update", requestOptions)
+                fetch("https://api.phoenixassurance.co.in/api/v1/CRUD/Update", requestOptions)
                   .then((response) => response.text())
                   .then((result) => console.log(result))
                   .catch((error) => console.error(error));

@@ -461,7 +461,9 @@ const Toolbox = ({
                                 tooltipKey='Screenshot'
                                 tooltipPosition='top' />
                         </div>}
-                        {isButtonEnabled('hangup', _toolbarButtons) && <div className="toolbox-icon   " onClick={handelLocationDilog}>
+                        {isButtonEnabled('hangup', _toolbarButtons) &&
+                            _endConferenceSupported
+                                 && <div className="toolbox-icon   " onClick={handelLocationDilog}>
                             {/* <Icon src={IconSS} /> */}
                             <BaseIndicator
                                 icon={Ilocation}

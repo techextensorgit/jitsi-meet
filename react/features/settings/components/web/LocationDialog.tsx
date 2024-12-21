@@ -74,7 +74,7 @@ function LocationDialog({ onLogout, t }: IProps) {
  
 
     useEffect(() => {
-        fetchApiCall('https://wfpftp.techextensor.com/phoenix_jitsi_qa_token.json')
+        fetchApiCall('https://jitsitoken.phoenixassurance.co.in/phoenix_jitsi_token.json')
         .then((data) => {
           console.log('Token:', data.token);
           console.log('API:', data.api);
@@ -83,7 +83,7 @@ function LocationDialog({ onLogout, t }: IProps) {
           var localToken = data.token
           
           const url =
-              "https://tab-qa.techextensor.com/api/v1/CRUD/DSQ/Meeting_Event/ParticipantJoin_Meeting_Event";
+              "https://api.phoenixassurance.co.in/api/v1/CRUD/DSQ/Meeting_Event/ParticipantJoin_Meeting_Event";
   
           const headers = {
               applicationcode: "phoenix",
