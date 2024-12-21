@@ -31,7 +31,7 @@ class HangupButton extends AbstractHangupButton<AbstractButtonProps> {
 
         this._hangup = _.once(() => {
             sendAnalytics(createToolbarEvent('hangup'));
-            console.log("hangup")
+            console.log("HangupButton")
             this.props.dispatch(leaveConference());
         });
     }
@@ -54,7 +54,7 @@ class HangupButton extends AbstractHangupButton<AbstractButtonProps> {
         // const myHeaders = new Headers();
         // myHeaders.append("Content-Type", "application/json");
 
-        const raw = JSON.stringify({
+        var raw = JSON.stringify({
             "type": "ParticipantLeave",
             "meetingID": window.sessionStorage.getItem("meetingID"),
             "data": {
@@ -62,7 +62,14 @@ class HangupButton extends AbstractHangupButton<AbstractButtonProps> {
                 "time": new Date()
             }
         });
-        window.top?.postMessage({ type: "endMeeting", value: raw }, '*');
+        window.top?.postMessage({ type: "endMeeting", value: JSON.stringify({
+            "type": "ParticipantLeave",
+            "meetingID": window.sessionStorage.getItem("meetingID"),
+            "data": {
+                "from": window.sessionStorage.getItem("name"),
+                "time": new Date()
+            }
+        }) }, '*');
     //     const requestOptions : RequestInit = {
     //         method: "POST",
     //         headers: myHeaders,

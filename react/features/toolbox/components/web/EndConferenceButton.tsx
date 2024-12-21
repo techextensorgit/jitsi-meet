@@ -40,7 +40,11 @@ export const EndConferenceButton = (props: IProps) => {
     const _isInBreakoutRoom = useSelector(isInBreakoutRoom);
 
     const onEndConference = useCallback(() => {
+        console.log("onEndConference")
+
         dispatch(endConference());
+
+        // window.top?.postMessage({ type: "endMeeting", value: true }, '*');
     }, [ dispatch ]);
 
     return (<>

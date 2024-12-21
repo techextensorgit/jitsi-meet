@@ -36,11 +36,28 @@ interface IProps {
 export const LeaveConferenceButton = (props: IProps) => {
     const { t } = useTranslation();
     const dispatch = useDispatch();
-
+    var raw = JSON.stringify({
+        "type": "ParticipantLeave",
+        "meetingID": window.sessionStorage.getItem("meetingID"),
+        "data": {
+            "from": window.sessionStorage.getItem("name"),
+            "time": new Date()
+        }
+    });
     const onLeaveConference = useCallback(() => {
+
+
+        console.log("onLeaveConference", raw)
+
+        window.top?.postMessage({ type: "endMeeting", value: raw }, '*');
+
         sendAnalytics(createToolbarEvent('hangup'));
+
         dispatch(leaveConference());
+<<<<<<< HEAD
         window.top?.postMessage({ type: "endMeeting", value: true }, '*');
+=======
+>>>>>>> 6e70776e351972c138c07b46ba6da96762462e43
 
     }, [ dispatch ]);
 

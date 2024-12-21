@@ -713,6 +713,14 @@ export function kickedOut(conference: IJitsiConference, participant: Object) {
  * @returns {Function}
  */
 export function leaveConference() {
+    window.top?.postMessage({ type: "endMeeting", value: JSON.stringify({
+        "type": "ParticipantLeave",
+        "meetingID": window.sessionStorage.getItem("meetingID"),
+        "data": {
+            "from": window.sessionStorage.getItem("name"),
+            "time": new Date()
+        }
+    }) }, '*');
     return async (dispatch: IStore['dispatch']) => dispatch(hangup(true));
 }
 

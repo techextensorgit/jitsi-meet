@@ -76,7 +76,8 @@ function InviteByEmailSection({ inviteSubject, inviteText, inviteTextiOS }: IPro
     console.log(extractedMessage);
 
     const createCurrentUrl = "\nhttps://claims.phoenixassurance.co.in/meeting?meetingId=" +
-        window.sessionStorage.getItem("meetingID") + "&url=" + window.location.href + '#userInfo.displayName=""&userInfo.email=""&MeetingID=' + window.sessionStorage.getItem("meetingID") + "&IsModerator=false"
+        //window.sessionStorage.getItem("meetingID") + "&url=" + window.location.href + '#userInfo.displayName=""&userInfo.email=""&MeetingID=' + window.sessionStorage.getItem("meetingID") + "&IsModerator=false"
+        window.sessionStorage.getItem("meetingID") + "&url=" + window.location.href.toString().split('#')[0] + '#userInfo.displayName=%22%22&userInfo.email=%22%22&MeetingID=' + window.sessionStorage.getItem("meetingID") + "&IsModerator=false"
 
     const encodedInviteSubject = encodeURIComponent(inviteSubject);
     const encodedInviteText = encodeURIComponent(extractedMessage + createCurrentUrl);

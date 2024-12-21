@@ -77,11 +77,36 @@ export function hangup(requestFeedback = false, feedbackTitle?: string) {
             });
         }
         // alert(feedbackTitle || "sorry")
+<<<<<<< HEAD
         // window.top.postMessage('endMeeting', '*')
         console.log("endMeeting",{ type: "endMeeting", value: true })
         if (feedbackTitle) {
             if (feedbackTitle == "The meeting has been terminated")
                 window.top?.postMessage({ type: "endMeeting", value: true }, '*');
+=======
+        // // window.top.postMessage('endMeeting', '*')
+        // if (feedbackTitle) {
+        //     if (feedbackTitle == "The meeting has been terminated")
+        // var raw = JSON.stringify({
+        //     "type": "ParticipantLeave",
+        //     "meetingID": window.sessionStorage.getItem("meetingID"),
+        //     "data": {
+        //         "from": window.sessionStorage.getItem("name"),
+        //         "time": new Date()
+        //     }
+        // });
+        setTimeout(()=>{
+
+            window.top?.postMessage({ type: "endMeeting", value: JSON.stringify({
+                "type": "ParticipantLeave",
+                "meetingID": window.sessionStorage.getItem("meetingID"),
+                "data": {
+                    "from": window.sessionStorage.getItem("name"),
+                    "time": new Date()
+                }
+            }) }, '*');
+        },0)
+>>>>>>> 6e70776e351972c138c07b46ba6da96762462e43
 
 
             // const myHeaders = new Headers();
@@ -109,7 +134,7 @@ export function hangup(requestFeedback = false, feedbackTitle?: string) {
             //     .then((response) => response.text())
             //     .then((result) => console.log(result))
             //     .catch((error) => console.log("error" + error));
-        }
+        // }
         return APP.conference.hangup(requestFeedback, feedbackTitle);
     };
 }
