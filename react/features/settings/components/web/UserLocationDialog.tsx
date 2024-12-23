@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 import { translate } from '../../../base/i18n/functions';
 import Dialog from '../../../base/ui/components/web/Dialog';
-import { to } from 'react-emoji-render/data/aliases';
+//import { to } from 'react-emoji-render/data/aliases';
 
 /**
  * The type of {@link UserLocationDialog}'s React {@code Component} props.

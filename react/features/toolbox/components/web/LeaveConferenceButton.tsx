@@ -54,10 +54,9 @@ export const LeaveConferenceButton = (props: IProps) => {
         sendAnalytics(createToolbarEvent('hangup'));
 
         dispatch(leaveConference());
-<<<<<<< HEAD
+
         window.top?.postMessage({ type: "endMeeting", value: true }, '*');
-=======
->>>>>>> 6e70776e351972c138c07b46ba6da96762462e43
+
 
     }, [ dispatch ]);
 
